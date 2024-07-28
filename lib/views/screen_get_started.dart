@@ -1,14 +1,14 @@
 import 'package:ecommerce/views/screen_sign_up.dart';
 import 'package:flutter/material.dart';
 
-class AnimatedSignInScreen extends StatefulWidget {
-  const AnimatedSignInScreen({super.key});
+class GetStartedScreen extends StatefulWidget {
+  const GetStartedScreen({super.key});
 
   @override
-  _AnimatedSignInScreenState createState() => _AnimatedSignInScreenState();
+  State<GetStartedScreen> createState() => _GetStartedScreenState();
 }
 
-class _AnimatedSignInScreenState extends State<AnimatedSignInScreen>
+class _GetStartedScreenState extends State<GetStartedScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
