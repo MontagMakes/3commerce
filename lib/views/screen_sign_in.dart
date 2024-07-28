@@ -1,3 +1,4 @@
+import 'package:ecommerce/views/screen_sign_up.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedSignInScreen extends StatefulWidget {
@@ -7,7 +8,8 @@ class AnimatedSignInScreen extends StatefulWidget {
   _AnimatedSignInScreenState createState() => _AnimatedSignInScreenState();
 }
 
-class _AnimatedSignInScreenState extends State<AnimatedSignInScreen> with SingleTickerProviderStateMixin {
+class _AnimatedSignInScreenState extends State<AnimatedSignInScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -70,15 +72,21 @@ class _AnimatedSignInScreenState extends State<AnimatedSignInScreen> with Single
                           ),
                           child: const Center(
                             child: Text(
-                              'R',
-                              style: TextStyle(color: Colors.white, fontSize: 48, fontWeight: FontWeight.bold),
+                              '3',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
                         const SizedBox(height: 20),
                         const Text(
-                          'RAMNI',
-                          style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                          '3Commerce',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -89,16 +97,37 @@ class _AnimatedSignInScreenState extends State<AnimatedSignInScreen> with Single
             Positioned(
               left: 0,
               right: 0,
-              bottom: 50,
+              bottom: 200,
               child: Center(
                 child: ElevatedButton(
-                  onPressed: _showSignInSheet,
-                  child: const Text('SIGN IN'),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ScreenSignUp())),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: const Color(0xFFFF4081),
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
                   ),
+                  child: const Text('GET STARTED'),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 150,
+              child: Center(
+                child: TextButton(
+                  onPressed: _showSignInSheet,
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
+                  ),
+                  child: const Text('SIGN IN'),
                 ),
               ),
             ),
@@ -115,7 +144,8 @@ class SignInBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
@@ -126,7 +156,11 @@ class SignInBottomSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('SIGN IN', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFFF4081))),
+            const Text('SIGN IN',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFFF4081))),
             const SizedBox(height: 20),
             const TextField(
               decoration: InputDecoration(
@@ -156,7 +190,8 @@ class SignInBottomSheet extends StatelessWidget {
             const SizedBox(height: 10),
             TextButton(
               onPressed: () {},
-              child: const Text('Forgot password?', style: TextStyle(color: Colors.grey)),
+              child: const Text('Forgot password?',
+                  style: TextStyle(color: Colors.grey)),
             ),
           ],
         ),
