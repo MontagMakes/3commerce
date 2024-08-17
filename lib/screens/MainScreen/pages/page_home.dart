@@ -1,4 +1,4 @@
-import 'package:e_commerce/views/screen_notifications.dart';
+import 'package:e_commerce/screens/NotificationsScreen/screen_notifications.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {

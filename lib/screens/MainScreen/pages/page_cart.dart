@@ -1,4 +1,4 @@
-import 'package:e_commerce/views/screen_checkout.dart';
+import 'package:e_commerce/screens/CheckoutScreen/screen_checkout.dart';
 import 'package:flutter/material.dart';
 
 class CartPage extends StatelessWidget {
