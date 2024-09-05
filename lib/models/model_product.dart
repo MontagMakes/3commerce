@@ -2,64 +2,70 @@
 import 'dart:convert';
 
 class ProductModel {
-  String name;
-  String description;
-  String category;
-  String imageURL;
-  String modelURL;
-  int price;
-  bool instock;
+  final int id;
+  final String title;
+  final String description;
+  final int price;
+  final String imageUrl;
+  final String modelUrl; // Link to 3D model
+  final String category;
+  final double rating;
   ProductModel({
-    required this.name,
+    required this.id,
+    required this.title,
     required this.description,
     required this.price,
+    required this.imageUrl,
+    required this.modelUrl,
     required this.category,
-    required this.imageURL,
-    required this.modelURL,
-    required this.instock,
+    required this.rating,
   });
 
   ProductModel copyWith({
-    String? name,
+    int? id,
+    String? title,
     String? description,
     int? price,
+    String? imageUrl,
+    String? modelUrl,
     String? category,
-    String? imageURL,
-    String? modelURL,
-    bool? instock,
+    double? rating,
   }) {
     return ProductModel(
-      name: name ?? this.name,
+      id: id ?? this.id,
+      title: title ?? this.title,
       description: description ?? this.description,
       price: price ?? this.price,
+      imageUrl: imageUrl ?? this.imageUrl,
+      modelUrl: modelUrl ?? this.modelUrl,
       category: category ?? this.category,
-      imageURL: imageURL ?? this.imageURL,
-      modelURL: modelURL ?? this.modelURL,
-      instock: instock ?? this.instock,
+      rating: rating ?? this.rating,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'name': name,
+      'id': id,
+      'title': title,
       'description': description,
       'price': price,
+      'imageUrl': imageUrl,
+      'modelUrl': modelUrl,
       'category': category,
-      'imageURL': imageURL,
-      'modelURL': modelURL,
-      'instock': instock,
+      'rating': rating,
     };
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      name: map['name'] as String,
-      description: map['description'] as String,
-      price: map['price'] as int,
-      category: map['category'] as String,
-      imageURL: map['imageURL'] as String,
-      modelURL: map['modelURL'] as String,
-      instock: map['instock'] as bool,
+      id: map['id'] as int,
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      price: map['price'] ?? 0,
+      imageUrl: map['imageUrl'] ?? '',
+      modelUrl: map['modelUrl'] ?? '',
+      category: map['category'] ?? '',
+      rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -70,30 +76,32 @@ class ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel(name: $name, description: $description, price: $price, category: $category, imageURL: $imageURL, modelURL: $modelURL, instock: $instock)';
+    return 'ProductModel(id: $id, title: $title, description: $description, price: $price, imageUrl: $imageUrl, modelUrl: $modelUrl, category: $category, rating: $rating)';
   }
 
   @override
   bool operator ==(covariant ProductModel other) {
     if (identical(this, other)) return true;
 
-    return other.name == name &&
+    return other.id == id &&
+        other.title == title &&
         other.description == description &&
         other.price == price &&
+        other.imageUrl == imageUrl &&
+        other.modelUrl == modelUrl &&
         other.category == category &&
-        other.imageURL == imageURL &&
-        other.modelURL == modelURL &&
-        other.instock == instock;
+        other.rating == rating;
   }
 
   @override
   int get hashCode {
-    return name.hashCode ^
+    return id.hashCode ^
+        title.hashCode ^
         description.hashCode ^
         price.hashCode ^
+        imageUrl.hashCode ^
+        modelUrl.hashCode ^
         category.hashCode ^
-        imageURL.hashCode ^
-        modelURL.hashCode ^
-        instock.hashCode;
+        rating.hashCode;
   }
 }

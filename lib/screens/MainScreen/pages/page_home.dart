@@ -1,21 +1,58 @@
-import 'package:e_commerce/screens/NotificationsScreen/screen_notifications.dart';
+import 'package:e_commerce/models/model_product.dart';
+import 'package:e_commerce/providers/provider_product.dart';
+import 'package:e_commerce/services/service_locator.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
   });
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late TextEditingController _searchController;
+
+  List<ProductModel> _searchResults = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _searchController.dispose();
+  }
+
+  Future<void> _performSearch(String query) async {
+    List<ProductModel> allProducts = getIt<ProviderProduct>().getAllProducts();
+    setState(() {
+      _searchResults = allProducts
+          .where((product) =>
+              product.title.toLowerCase().startsWith(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    List<ProductModel> listOfProducts =
+        getIt<ProviderProduct>().getAllProducts();
+
+    List<ProductModel> displayProducts =
+        _searchController.text.isEmpty ? listOfProducts : _searchResults;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.search),
-        ),
+        leading: const Icon(Icons.search),
         title: TextField(
+          controller: _searchController,
           decoration: const InputDecoration(
             hintText: 'Search...',
             border: InputBorder.none,
@@ -24,156 +61,83 @@ class HomePage extends StatelessWidget {
           style: const TextStyle(color: Colors.black),
           onChanged: (value) {
             // Handle search input change
+            _performSearch(value);
           },
         ),
         backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ScreenNotifications()));
-            },
-            icon: const Icon(Icons.notification_important),
-          ),
-        ],
+        
       ),
-      body: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.only(top: 0, left: 20, right: 20),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Trending Products',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'See All',
-                          style: TextStyle(color: Colors.red),
-                        ))
-                  ],
-                ),
-                SizedBox(
-                  width: 400,
-                  height: 170,
-                  child: ListView.separated(
-                      separatorBuilder: (context, index) => const SizedBox(
-                            width: 10,
+      body: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: GridView.count(
+            physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
+            crossAxisCount: 2,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 5,
+            children: [
+              for (var product in displayProducts)
+                InkWell(
+                  child: Material(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    color: Colors.white,
+                    elevation: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/productDetails',
+                            arguments: product);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            product.imageUrl,
+                            height: 120,
+                            width: 130,
                           ),
-                      itemCount: 5,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (BuildContext context, int index) =>
-                          Material(
-                            color: Colors.white,
-                            elevation: 5,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                          Text(
+                            product.title,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 7.0, right: 7.0, top: 5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Image.network(
-                                    'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Fuji/2021/June/Fuji_Quad_Apparel_1x._SY116_CB667159060_.jpg'),
-                                const Text('Product Name'),
-                                const Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                Text(
+                                  "\$${product.price.toString()}",
+                                  style: const TextStyle(
+                                      color: Colors.grey, fontSize: 20),
+                                ),
+                                const SizedBox(width: 70),
+                                Row(
                                   children: [
-                                    Text('Price'),
-                                    SizedBox(width: 70),
-                                    Text('Rating'),
+                                    const Icon(
+                                      Icons.star_border_outlined,
+                                      color: Colors.red,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    // Rating text
+                                    Text(
+                                      "${product.rating}",
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],
                             ),
-                          )),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 0, left: 20, right: 20),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Popular Categories',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                          ),
+                        ],
                       ),
-                    ),
-                    TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'See All',
-                          style: TextStyle(color: Colors.red),
-                        ))
-                  ],
-                ),
-                Container(
-                  height: 30,
-                  width: 400,
-                  margin: const EdgeInsets.only(bottom: 10),
-                  child: ListView.builder(
-                    itemCount: 10,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: OutlinedButton(
-                          onPressed: () {},
-                          child: const Center(
-                            child: Text("All"),
-                          )),
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 400,
-                  height: 170,
-                  child: ListView.separated(
-                      separatorBuilder: (context, index) => const SizedBox(
-                            width: 10,
-                          ),
-                      itemCount: 5,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (BuildContext context, int index) =>
-                          Material(
-                            color: Colors.white,
-                            elevation: 5,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Image.network(
-                                    'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Fuji/2021/June/Fuji_Quad_Apparel_1x._SY116_CB667159060_.jpg'),
-                                const Text('Product Name'),
-                                const Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Price'),
-                                    SizedBox(width: 70),
-                                    Text('Rating'),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )),
-                )
-              ],
-            ),
-          ),
-        ],
+            ]),
       ),
     );
   }

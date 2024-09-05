@@ -1,14 +1,21 @@
+import 'package:e_commerce/providers/provider_cart.dart';
 import 'package:e_commerce/screens/CheckoutScreen/screen_checkout.dart';
+import 'package:e_commerce/services/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<ProviderCart>(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: const SizedBox(),
         leadingWidth: 0,
         title: const Text(
@@ -18,113 +25,83 @@ class CartPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: ListView(
-              children: const [
-                CartItem('Ramni chair', 1700, 1,
-                    'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Fuji/2021/June/Fuji_Quad_Apparel_1x._SY116_CB667159060_.jpg'),
-                CartItem('Panka Chair', 1700, 2,
-                    'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Fuji/2021/June/Fuji_Quad_Apparel_1x._SY116_CB667159060_.jpg'),
-                CartItem('Art Deco Home', 1700, 1,
-                    'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Fuji/2021/June/Fuji_Quad_Apparel_1x._SY116_CB667159060_.jpg'),
-                CartItem('RAMI CUP', 1700, 3,
-                    'https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Fuji/2021/June/Fuji_Quad_Apparel_1x._SY116_CB667159060_.jpg'),
-              ],
-            ),
-          ),
-          const TotalAmount(),
-          const CheckoutButton(),
+          _cartList(cartProvider),
+          _totalAmount(cartProvider.totalAmount),
+          _checkoutButton(context),
         ],
       ),
     );
   }
-}
 
-class CartItem extends StatelessWidget {
-  final String name;
-  final int price;
-  final int quantity;
-  final String imagePath;
-
-  const CartItem(this.name, this.price, this.quantity, this.imagePath,
-      {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-              constraints: const BoxConstraints(maxHeight: 100, maxWidth: 100),
-              child: Image.network(imagePath, fit: BoxFit.cover)),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text('\$$price', style: const TextStyle(color: Colors.grey)),
-                const SizedBox(height: 8),
-                Row(
+  Expanded _cartList(ProviderCart cartProvider) {
+    return Expanded(
+        child: ListView(
+      children: List.generate(cartProvider.items.length, (index) {
+        return Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  constraints:
+                      const BoxConstraints(maxHeight: 100, maxWidth: 100),
+                  child: Image.asset(cartProvider.items[index].imageUrl,
+                      fit: BoxFit.cover)),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.remove_circle_outline),
-                      onPressed: () {},
-                    ),
-                    Text('$quantity'),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle_outline),
-                      onPressed: () {},
-                    ),
+                    Text(cartProvider.items[index].title,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 4),
+                    Text('\$${cartProvider.itemsList[index].price}',
+                        style: const TextStyle(color: Colors.grey)),
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        onPressed: () {
+                          cartProvider.removeItem(cartProvider.items[index]);
+                        },
+                        icon: const Icon(Icons.remove_circle_outline),
+                      ),
+                    )
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        );
+      }),
+    ));
   }
-}
 
-class TotalAmount extends StatelessWidget {
-  const TotalAmount({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Container _totalAmount(double totalAmount) {
     return Container(
       color: Colors.white,
-      child: const Padding(
-        padding: EdgeInsets.all(16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               'TOTAL AMOUNT',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Text(
-              '\$1700.00',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              '\$$totalAmount',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ],
         ),
       ),
     );
   }
-}
 
-class CheckoutButton extends StatelessWidget {
-  const CheckoutButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Container _checkoutButton(context) {
     return Container(
       width: double.infinity,
       color: Colors.white,
@@ -138,8 +115,21 @@ class CheckoutButton extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const ScreenCheckout()));
+          if (getIt<ProviderCart>().getCartLength() == 0) {
+            Fluttertoast.showToast(
+              msg: "Your cart is empty. Please add items to proceed.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ScreenCheckout()));
+          }
         },
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,

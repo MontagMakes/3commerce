@@ -1,12 +1,15 @@
+import 'package:e_commerce/providers/provider_cart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ScreenCheckout extends StatelessWidget {
   const ScreenCheckout({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<ProviderCart>(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Checkout", style: TextStyle(color: Colors.grey)),
@@ -16,7 +19,7 @@ class ScreenCheckout extends StatelessWidget {
         length: 3,
         initialIndex: 0,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(left: 16.0),
           child: ListView(
             children: [
               const Text("shipping address",
@@ -43,6 +46,7 @@ class ScreenCheckout extends StatelessWidget {
                       labelText: 'Postal Code',
                       hintText: '123456',
                       hintStyle: TextStyle(color: Colors.grey),
+                      
                     ),
                   ),
                 ],
@@ -50,7 +54,6 @@ class ScreenCheckout extends StatelessWidget {
               const SizedBox(height: 20),
               const Text("Payment method",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
               const SizedBox(
                 width: 300,
                 height: 100,
@@ -102,8 +105,8 @@ class ScreenCheckout extends StatelessWidget {
                 ]),
               ),
               const Text("TOTAL AMOUNT", style: TextStyle(color: Colors.grey)),
-              const Text("\$1700.00",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              Text("\$${cartProvider.totalAmount}",
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -114,7 +117,7 @@ class ScreenCheckout extends StatelessWidget {
                   // Handle place order action
                 },
                 child:
-                    const Text("PLACE ORDER", style: TextStyle(fontSize: 16)),
+                    const Text("PLACE ORDER", style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
             ],
           ),

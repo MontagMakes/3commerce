@@ -6,52 +6,52 @@ import 'package:flutter/foundation.dart';
 import 'package:e_commerce/models/model_product.dart';
 
 class OrderModel {
-  int userId;
-  List<ProductModel> products;
-  int totalNumber;
-  String status;
-  String date;
+  final String id;
+  final List<ProductModel> products;
+  final double totalAmount;
+  final DateTime orderDate;
+  final String status;
   OrderModel({
-    required this.userId,
+    required this.id,
     required this.products,
-    required this.totalNumber,
+    required this.totalAmount,
+    required this.orderDate,
     required this.status,
-    required this.date,
   });
 
   OrderModel copyWith({
-    int? userId,
+    String? id,
     List<ProductModel>? products,
-    int? totalNumber,
+    double? totalAmount,
+    DateTime? orderDate,
     String? status,
-    String? date,
   }) {
     return OrderModel(
-      userId: userId ?? this.userId,
+      id: id ?? this.id,
       products: products ?? this.products,
-      totalNumber: totalNumber ?? this.totalNumber,
+      totalAmount: totalAmount ?? this.totalAmount,
+      orderDate: orderDate ?? this.orderDate,
       status: status ?? this.status,
-      date: date ?? this.date,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'userId': userId,
+      'id': id,
       'products': products.map((x) => x.toMap()).toList(),
-      'totalNumber': totalNumber,
+      'totalAmount': totalAmount,
+      'orderDate': orderDate.millisecondsSinceEpoch,
       'status': status,
-      'date': date,
     };
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
-      userId: map['userId'] as int,
+      id: map['id'] as String,
       products: List<ProductModel>.from((map['products'] as List<int>).map<ProductModel>((x) => ProductModel.fromMap(x as Map<String,dynamic>),),),
-      totalNumber: map['totalNumber'] as int,
+      totalAmount: map['totalAmount'] as double,
+      orderDate: DateTime.fromMillisecondsSinceEpoch(map['orderDate'] as int),
       status: map['status'] as String,
-      date: map['date'] as String,
     );
   }
 
@@ -61,7 +61,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(userId: $userId, products: $products, totalNumber: $totalNumber, status: $status, date: $date)';
+    return 'OrderModel(id: $id, products: $products, totalAmount: $totalAmount, orderDate: $orderDate, status: $status)';
   }
 
   @override
@@ -69,19 +69,19 @@ class OrderModel {
     if (identical(this, other)) return true;
   
     return 
-      other.userId == userId &&
+      other.id == id &&
       listEquals(other.products, products) &&
-      other.totalNumber == totalNumber &&
-      other.status == status &&
-      other.date == date;
+      other.totalAmount == totalAmount &&
+      other.orderDate == orderDate &&
+      other.status == status;
   }
 
   @override
   int get hashCode {
-    return userId.hashCode ^
+    return id.hashCode ^
       products.hashCode ^
-      totalNumber.hashCode ^
-      status.hashCode ^
-      date.hashCode;
+      totalAmount.hashCode ^
+      orderDate.hashCode ^
+      status.hashCode;
   }
 }

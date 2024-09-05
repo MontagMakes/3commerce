@@ -1,6 +1,8 @@
+import 'package:e_commerce/providers/provider_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class SignInBottomSheet extends StatefulWidget {
   const SignInBottomSheet({super.key});
@@ -10,26 +12,37 @@ class SignInBottomSheet extends StatefulWidget {
 }
 
 class _SignInBottomSheetState extends State<SignInBottomSheet> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late TextEditingController _userEmailController;
+  late TextEditingController _emailController;
   late TextEditingController _passwordController;
   bool _isPasswordVisible = false;
   bool _isLoading = false;
-  //init state
+  late ProviderAuth _authProvider;
 
   @override
   void initState() {
     super.initState();
-    _userEmailController = TextEditingController();
+    _emailController = TextEditingController();
     _passwordController = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _authProvider = Provider.of<ProviderAuth>(context, listen: false);
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
@@ -39,7 +52,7 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
         child: _isLoading
             ? const Center(
                 child: CircularProgressIndicator(
-                color: Colors.white,
+                color: Colors.black,
               ))
             : Form(
                 key: _formKey,
@@ -64,7 +77,7 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                         }
                         return null;
                       },
-                      controller: _userEmailController,
+                      controller: _emailController,
                       decoration: const InputDecoration(
                         labelText: 'Email',
                         border: OutlineInputBorder(),
@@ -106,20 +119,18 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () async {
-                        if (!_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           setState(() {
                             _isLoading = true;
                           });
 
                           try {
-                            await _auth.signInWithEmailAndPassword(
-                              email: _userEmailController.text,
-                              password: _passwordController.text,
-                            );
+                            await _authProvider.signIn(
+                                _emailController.text, _passwordController.text);
 
                             await Future.delayed(const Duration(seconds: 2));
-
                             Navigator.pushNamedAndRemoveUntil(
+                              // ignore: use_build_context_synchronously
                               context,
                               "/main",
                               (route) => false,
@@ -137,8 +148,7 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                                 message = 'Invalid email provided.';
                                 break;
                               default:
-                                message =
-                                    'An error occurred. Please try again.';
+                                message = 'An error occurred. Please try again.';
                             }
 
                             Fluttertoast.showToast(
@@ -149,6 +159,7 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                                 backgroundColor: Colors.white,
                                 textColor: Colors.black,
                                 fontSize: 16.0);
+                          } finally {
                             setState(() {
                               _isLoading = false;
                             });
@@ -165,8 +176,7 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                     const SizedBox(height: 10),
                     TextButton(
                       onPressed: () async {
-                        FirebaseAuth.instance.sendPasswordResetEmail(
-                            email: _userEmailController.text);
+                        _authProvider.resetPassword(_emailController.text);
                         Fluttertoast.showToast(
                           msg: "Password reset email sent",
                         );

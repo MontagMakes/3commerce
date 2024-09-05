@@ -1,6 +1,8 @@
+import 'package:e_commerce/providers/provider_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class ScreenSignUp extends StatefulWidget {
   const ScreenSignUp({super.key});
@@ -11,9 +13,26 @@ class ScreenSignUp extends StatefulWidget {
 
 class _ScreenSignUpState extends State<ScreenSignUp> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
   bool _isLoading = false;
+  ProviderAuth? _authProvider;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _authProvider = Provider.of<ProviderAuth>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +112,21 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                             child: Column(
                               children: <Widget>[
                                 TextFormField(
+                                  controller: _nameController,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your Full Name';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter Full Name',
+                                    hintText: 'Abdul Rehman',
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                TextFormField(
                                   controller: _emailController,
                                   validator: (value) {
                                     if (value!.isEmpty) {
@@ -106,7 +140,7 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                   },
                                   decoration: const InputDecoration(
                                     labelText: 'Enter Email',
-                                    hintText: 'Joe123@gmail.com',
+                                    hintText: 'AbdulRehman@gmail.com',
                                     hintStyle: TextStyle(color: Colors.grey),
                                   ),
                                 ),
@@ -127,9 +161,22 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                     }
                                     return null;
                                   },
-                                  obscureText: true,
-                                  decoration: const InputDecoration(
+                                  obscureText: !_isPasswordVisible,
+                                  decoration: InputDecoration(
                                     labelText: 'Enter Password',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _isPasswordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isPasswordVisible =
+                                              !_isPasswordVisible;
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 20),
@@ -143,41 +190,42 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                     }
                                     return null;
                                   },
-                                  obscureText: true,
+                                  obscureText: !_isPasswordVisible,
                                   decoration: const InputDecoration(
                                     labelText: 'Confirm Password',
                                   ),
                                 ),
                                 const SizedBox(height: 30),
                                 SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 15.0),
-                                      backgroundColor: Colors.red,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 15.0),
+                                        backgroundColor: Colors.red,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
                                       ),
-                                    ),
-                                    onPressed: () async {
-                                      String message = "";
-                                      if (_formKey.currentState!.validate()) {
+                                      onPressed: () async {
+                                        String message = "";
+
                                         setState(() {
                                           _isLoading = true;
                                         });
                                         try {
-                                          await FirebaseAuth.instance
-                                              .createUserWithEmailAndPassword(
-                                                  email: _emailController.text,
-                                                  password:
-                                                      _passwordController.text);
+                                          await _authProvider!.signUp(
+                                              _emailController.text,
+                                              _passwordController.text,
+                                              _nameController.text);
 
                                           setState(() {
                                             _isLoading = false;
                                           });
+
                                           Navigator.pushNamedAndRemoveUntil(
+                                            // ignore: use_build_context_synchronously
                                             context,
                                             "/main",
                                             (route) => false,
@@ -202,18 +250,19 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                             textColor: Colors.black,
                                             fontSize: 16.0,
                                           );
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
                                         }
-                                      }
-                                    },
-                                    child: const Text(
-                                      'NEXT',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.0,
+                                      },
+                                      child: const Text(
+                                        'NEXT',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
+                                    )),
                               ],
                             ),
                           ),
@@ -226,6 +275,4 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
       ),
     );
   }
-
-  _signIn() {}
 }
