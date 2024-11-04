@@ -1,7 +1,7 @@
 import 'package:e_commerce/models/model_product.dart';
 import 'package:e_commerce/providers/provider_product.dart';
-import 'package:e_commerce/services/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -29,8 +29,8 @@ class _HomePageState extends State<HomePage> {
     _searchController.dispose();
   }
 
-  Future<void> _performSearch(String query) async {
-    List<ProductModel> allProducts = getIt<ProviderProduct>().getAllProducts();
+  Future<void> _performSearch(String query, products) async {
+    List<ProductModel> allProducts = products;
     setState(() {
       _searchResults = allProducts
           .where((product) =>
@@ -41,8 +41,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final providerProduct = Provider.of<ProviderProduct>(context);
     List<ProductModel> listOfProducts =
-        getIt<ProviderProduct>().getAllProducts();
+        providerProduct.getAllProducts();
 
     List<ProductModel> displayProducts =
         _searchController.text.isEmpty ? listOfProducts : _searchResults;
@@ -61,7 +62,7 @@ class _HomePageState extends State<HomePage> {
           style: const TextStyle(color: Colors.black),
           onChanged: (value) {
             // Handle search input change
-            _performSearch(value);
+            _performSearch(value, listOfProducts);
           },
         ),
         backgroundColor: Colors.white,

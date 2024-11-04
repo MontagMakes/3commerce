@@ -20,15 +20,14 @@ const debugging = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupServiceLocator();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.android,
   );
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => getIt<ProviderAuth>()),
-    ChangeNotifierProvider(create: (context) => getIt<ProviderCart>()),
-    ChangeNotifierProvider(create: (context) => getIt<ProviderOrder>()),
-    ChangeNotifierProvider(create: (context) => getIt<ProviderProduct>()),
+    ChangeNotifierProvider(create: (context) => ProviderAuth()),
+    ChangeNotifierProvider(create: (context) => ProviderCart()),
+    ChangeNotifierProvider(create: (context) => ProviderOrder()),
+    ChangeNotifierProvider(create: (context) => ProviderProduct()),
   ], child: const MyApp()));
 }
 

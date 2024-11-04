@@ -1,6 +1,5 @@
 import 'package:e_commerce/providers/provider_cart.dart';
 import 'package:e_commerce/screens/CheckoutScreen/screen_checkout.dart';
-import 'package:e_commerce/services/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +26,7 @@ class CartPage extends StatelessWidget {
         children: [
           _cartList(cartProvider),
           _totalAmount(cartProvider.totalAmount),
-          _checkoutButton(context),
+          _checkoutButton(context, cartProvider),
         ],
       ),
     );
@@ -101,7 +100,7 @@ class CartPage extends StatelessWidget {
     );
   }
 
-  Container _checkoutButton(context) {
+  Container _checkoutButton(context, providerCart) {
     return Container(
       width: double.infinity,
       color: Colors.white,
@@ -115,7 +114,7 @@ class CartPage extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          if (getIt<ProviderCart>().getCartLength() == 0) {
+          if (providerCart.getCartLength() == 0) {
             Fluttertoast.showToast(
               msg: "Your cart is empty. Please add items to proceed.",
               toastLength: Toast.LENGTH_SHORT,
