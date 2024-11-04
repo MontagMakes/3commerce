@@ -1,4 +1,4 @@
-import 'package:e_commerce/providers/provider_auth.dart';
+import 'package:e_commerce/providers/provider_user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,12 +7,12 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<ProviderAuth>(context);
+    final userProvider = Provider.of<ProviderUser>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       body: Column(
-        children: [_profileSection(authProvider), _accountOptions(context)],
+        children: [_profileSection(userProvider), _accountOptions(context)],
       ),
     );
   }
@@ -34,7 +34,11 @@ class ProfilePage extends StatelessWidget {
             title: 'Upcoming Orders',
             trailing: '0',
           ),
-          AccountOptionTile(icon: Icons.favorite_sharp, title: "Favourites", ontap: () => Navigator.pushNamed(context, '/favourites'),),
+          AccountOptionTile(
+            icon: Icons.favorite_sharp,
+            title: "Favourites",
+            ontap: () => Navigator.pushNamed(context, '/favourites'),
+          ),
           const AccountOptionTile(
             icon: Icons.location_on,
             title: 'Manage Address',
@@ -47,19 +51,28 @@ class ProfilePage extends StatelessWidget {
             icon: Icons.chat_bubble_outline,
             title: 'My Chats',
           ),
+          AccountOptionTile(
+            icon: Icons.logout,
+            title: 'Sign Out',
+            ontap: () async {
+              await Provider.of<ProviderUser>(context, listen: false).signOut();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/', (Route<dynamic> route) => false);
+            },
+          )
         ],
       ),
     );
   }
 
-  Container _profileSection(ProviderAuth authProvider) {
+  Container _profileSection(ProviderUser userProvider) {
     return Container(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             const SizedBox(height: 10),
             Text(
-              authProvider.currentUser?.name ?? 'User',
+              userProvider.getUserName() ?? 'User',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 24,
@@ -67,13 +80,12 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             Text(
-              authProvider.currentUser?.email ?? 'Email Address',
+              userProvider.getUserEmail() ?? 'Email Address',
               style: const TextStyle(color: Colors.black),
             ),
           ],
         ));
   }
-  
 }
 
 class AccountOptionTile extends StatelessWidget {
@@ -83,7 +95,11 @@ class AccountOptionTile extends StatelessWidget {
   final GestureTapCallback? ontap;
 
   const AccountOptionTile(
-      {super.key, required this.icon, required this.title, this.trailing, this.ontap});
+      {super.key,
+      required this.icon,
+      required this.title,
+      this.trailing,
+      this.ontap});
 
   @override
   Widget build(BuildContext context) {

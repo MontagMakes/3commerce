@@ -1,6 +1,7 @@
 import 'package:e_commerce/providers/provider_favourites.dart';
-import 'package:e_commerce/services/service_locator.dart';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ScreenFavourites extends StatefulWidget {
   const ScreenFavourites({super.key});
@@ -12,7 +13,7 @@ class ScreenFavourites extends StatefulWidget {
 class _ScreenFavouritesState extends State<ScreenFavourites> {
   @override
   Widget build(BuildContext context) {
-    final favouritesProvider = getIt<ProviderFavourites>();
+    final favouritesProvider = Provider.of<ProviderFavourites>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,

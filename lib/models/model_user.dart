@@ -5,9 +5,9 @@ import 'dart:convert';
 
 //Create a UserModel model
 class UserModel {
-  final String id;
-  String name = "";
-  final String email;
+  final String? id;
+  String? name = "";
+  final String? email;
   UserModel({
     required this.id,
     required this.name,

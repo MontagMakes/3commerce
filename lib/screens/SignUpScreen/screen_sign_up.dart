@@ -1,4 +1,4 @@
-import 'package:e_commerce/providers/provider_auth.dart';
+import 'package:e_commerce/providers/provider_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,7 +18,6 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isLoading = false;
-  ProviderAuth? _authProvider;
 
   @override
   void dispose() {
@@ -26,12 +25,6 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _authProvider = Provider.of<ProviderAuth>(context);
   }
 
   @override
@@ -45,38 +38,50 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
             colors: [Color(0xFFFF4081), Color(0xFFFF7043)],
           ),
         ),
+
+        // if the screen is loading, show loadingIndicator else show screen
         child: _isLoading
             ? const Center(
                 child: CircularProgressIndicator(
                 color: Colors.white,
               ))
             : Stack(children: [
+                // back button
                 const SizedBox(
                     height: 150,
                     child: BackButton(
                       color: Colors.white,
                     )),
-                const SizedBox(
+
+                // Logo
+                SizedBox(
                   height: 150,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Center(
-                        child: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.white,
+                          child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        child: const Center(
                           child: Text(
-                            'R',
+                            '3C',
                             style: TextStyle(
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red),
+                                color: Colors.white,
+                                fontSize: 48,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                      ),
+                      )),
                     ],
                   ),
                 ),
+
+                // SignUp Form
                 Container(
                   margin: const EdgeInsets.only(top: 150),
                   child: SingleChildScrollView(
@@ -94,6 +99,8 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           const SizedBox(height: 30),
+
+                          // SignUp label
                           const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -107,25 +114,31 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                 ),
                               ]),
                           const SizedBox(height: 20),
+
+                          // Form
                           Form(
                             key: _formKey,
                             child: Column(
                               children: <Widget>[
+
+                                // Name field
                                 TextFormField(
                                   controller: _nameController,
                                   validator: (value) {
                                     if (value!.isEmpty) {
-                                      return 'Please enter your Full Name';
+                                      return 'Please enter your Name';
                                     }
                                     return null;
                                   },
                                   decoration: const InputDecoration(
-                                    labelText: 'Enter Full Name',
-                                    hintText: 'Abdul Rehman',
+                                    labelText: 'Enter name',
+                                    hintText: 'muhammed',
                                     hintStyle: TextStyle(color: Colors.grey),
                                   ),
                                 ),
                                 const SizedBox(height: 20),
+
+                                // Email Field
                                 TextFormField(
                                   controller: _emailController,
                                   validator: (value) {
@@ -145,6 +158,8 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                   ),
                                 ),
                                 const SizedBox(height: 20),
+
+                                // Password Field
                                 TextFormField(
                                   controller: _passwordController,
                                   validator: (value) {
@@ -180,10 +195,12 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                   ),
                                 ),
                                 const SizedBox(height: 20),
+
+                                // Confirm Password Field
                                 TextFormField(
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter some text';
+                                      return 'Please enter your password again';
                                     } else if (value !=
                                         _passwordController.text) {
                                       return 'Passwords do not match';
@@ -196,73 +213,71 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                   ),
                                 ),
                                 const SizedBox(height: 30),
-                                SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 15.0),
-                                        backgroundColor: Colors.red,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30.0),
+
+                                // SignUp button
+                                Consumer<ProviderUser>(
+                                  builder: (context, auth, child) => SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15.0),
+                                          backgroundColor: Colors.red,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                          ),
                                         ),
-                                      ),
-                                      onPressed: () async {
-                                        String message = "";
+                                        onPressed: () async {
+                                          String message = "";
 
-                                        setState(() {
-                                          _isLoading = true;
-                                        });
-                                        try {
-                                          await _authProvider!.signUp(
-                                              _emailController.text,
-                                              _passwordController.text,
-                                              _nameController.text);
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
+                                            try {
+                                              await auth.signUp(
+                                                  _emailController.text,
+                                                  _passwordController.text,
+                                                  _nameController.text);
 
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                // ignore: use_build_context_synchronously
+                                                context,
+                                                "/main",
+                                                (route) => false,
+                                              );
 
-                                          Navigator.pushNamedAndRemoveUntil(
-                                            // ignore: use_build_context_synchronously
-                                            context,
-                                            "/main",
-                                            (route) => false,
-                                          );
-                                        } on FirebaseAuthException catch (e) {
-                                          switch (e.code) {
-                                            case 'email-already-in-use':
-                                              message = 'Email already in use';
-                                              break;
-                                            case 'weak-password':
-                                              message = 'Password is too weak';
-                                              break;
-                                            default:
-                                              message = 'An error occurred';
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+                                            } on FirebaseAuthException catch (e) {
+                                              message = e.code;
+                                              Fluttertoast.showToast(
+                                                msg: message,
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.CENTER,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.white,
+                                                textColor: Colors.black,
+                                                fontSize: 16.0,
+                                              );
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+                                            }
                                           }
-                                          Fluttertoast.showToast(
-                                            msg: message,
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.CENTER,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Colors.white,
-                                            textColor: Colors.black,
+                                        },
+                                        child: const Text(
+                                          'SignUp',
+                                          style: TextStyle(
+                                            color: Colors.white,
                                             fontSize: 16.0,
-                                          );
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
-                                        }
-                                      },
-                                      child: const Text(
-                                        'NEXT',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16.0,
+                                          ),
                                         ),
-                                      ),
-                                    )),
+                                      )),
+                                ),
                               ],
                             ),
                           ),

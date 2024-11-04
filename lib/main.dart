@@ -1,30 +1,33 @@
 import 'package:e_commerce/firebase_options.dart';
-import 'package:e_commerce/providers/provider_auth.dart';
 import 'package:e_commerce/providers/provider_cart.dart';
 import 'package:e_commerce/providers/provider_order.dart';
 import 'package:e_commerce/providers/provider_product.dart';
+import 'package:e_commerce/providers/provider_user.dart';
 import 'package:e_commerce/screens/FavouritesScreen/favourites.dart';
 import 'package:e_commerce/screens/ModelViewScreen/model_view.dart';
 import 'package:e_commerce/screens/MainScreen/screen_main.dart';
 import 'package:e_commerce/screens/CheckoutScreen/screen_checkout.dart';
-import 'package:e_commerce/screens/GetStartedScreen/screen_get_started.dart';
+import 'package:e_commerce/screens/SignInScreen/screen_sign_in.dart';
 import 'package:e_commerce/screens/NotificationsScreen/screen_notifications.dart';
 import 'package:e_commerce/screens/ProductDetailsScreen/product_details_screen.dart';
 import 'package:e_commerce/screens/SignUpScreen/screen_sign_up.dart';
-import 'package:e_commerce/services/service_locator.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 const debugging = false;
 
+// Main function that starts the app
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.android,
   );
+
+  // Using provider functions for state management
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => ProviderAuth()),
+    ChangeNotifierProvider(create: (context) => ProviderUser()),
     ChangeNotifierProvider(create: (context) => ProviderCart()),
     ChangeNotifierProvider(create: (context) => ProviderOrder()),
     ChangeNotifierProvider(create: (context) => ProviderProduct()),
@@ -40,8 +43,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       initialRoute: debugging == true ? "/main" : "/",
+
+      // using named routes, for better routing
       routes: {
-        "/": (context) => const GetStartedScreen(),
+        "/": (context) => const SignInScreen(),
         "/signUp": (context) => const ScreenSignUp(),
         "/main": (context) => const ScreenMain(),
         "/notifications": (context) => const ScreenNotifications(),

@@ -14,12 +14,11 @@ class FirebaseAuthService with ChangeNotifier {
     return _firebaseAuth.authStateChanges();
   }
 
-  Future<void> signIn(String email, String password) async {
+  Future<UserCredential> signIn(String email, String password) async {
     try {
-      await _firebaseAuth
+      return await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       // await _fetchUserData(userCredential.user?.uid);
-      notifyListeners();
     } on FirebaseAuthException {
       rethrow;
     }
@@ -44,27 +43,15 @@ class FirebaseAuthService with ChangeNotifier {
     }
   }
 
-  Future<void> _fetchUserData(String? uid) async {
-    if (uid == null) return;
-    try {
-      DocumentSnapshot doc =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      _currentUser = UserModel.fromMap(doc.data() as Map<String, dynamic>);
-      notifyListeners();
-    } catch (error) {
-      rethrow;
-    }
-  }
-
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
+    await _firebaseAuth.signOut();
     _currentUser = null;
     notifyListeners();
   }
 
   Future<void> resetPassword(String email) async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
     } catch (error) {
       rethrow;
     }
