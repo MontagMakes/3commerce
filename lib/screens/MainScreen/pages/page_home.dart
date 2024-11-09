@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final providerProduct = Provider.of<ProviderProduct>(context);
     List<ProductModel> listOfProducts =
-        providerProduct.getAllProducts();
+        providerProduct.totalProducts;
 
     List<ProductModel> displayProducts =
         _searchController.text.isEmpty ? listOfProducts : _searchResults;

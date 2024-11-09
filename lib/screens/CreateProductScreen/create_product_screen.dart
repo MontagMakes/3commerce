@@ -4,16 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
-class ScreenSignUp extends StatefulWidget {
-  const ScreenSignUp({super.key});
+class CreateProductScreen extends StatefulWidget {
+  const CreateProductScreen({super.key});
 
   @override
-  State<ScreenSignUp> createState() => _ScreenSignUpState();
+  State<CreateProductScreen> createState() => _CreateProductScreenState();
 }
 
-class _ScreenSignUpState extends State<ScreenSignUp> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+class _CreateProductScreenState extends State<CreateProductScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -22,9 +20,16 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
   bool _isLoading = false;
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -115,6 +120,7 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                             key: _formKey,
                             child: Column(
                               children: <Widget>[
+
                                 // Name field
                                 TextFormField(
                                   controller: _nameController,
@@ -236,13 +242,12 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                                   _passwordController.text,
                                                   _nameController.text);
 
-                                              WidgetsBinding.instance
-                                                  .addPostFrameCallback((_) {
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  "/main",
-                                                );
-                                              });
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                // ignore: use_build_context_synchronously
+                                                context,
+                                                "/main",
+                                                (route) => false,
+                                              );
 
                                               setState(() {
                                                 _isLoading = false;

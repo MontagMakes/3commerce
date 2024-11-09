@@ -1,3 +1,4 @@
+
 class Globals {
   static const List<String> categories = [
     "Category 1",
@@ -6,4 +7,6 @@ class Globals {
     "Category 4",
     "Category 5",
   ];
+
+  
 }

@@ -26,8 +26,11 @@ class ProviderUser with ChangeNotifier {
     _currentUserData = null;
   }
 
+  // SignUp
   Future<void> signUp(String email, String password, String name) async {
-    await _authService.signUp(email, password, name);
+    UserModel? userData = await _authService.signUp(email, password, name);
+
+    await _fireStoreService.createUser(userData);
   }
 
   Future<void> resetPassword(String email) async {

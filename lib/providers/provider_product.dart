@@ -1,29 +1,17 @@
-import 'package:e_commerce/data/data.dart';
 import 'package:e_commerce/models/model_product.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProviderProduct with ChangeNotifier {
-  List<ProductModel> _products = [];
+  List<ProductModel> _totalProducts = [];
 
-  List<ProductModel> get products => [..._products];
-
-  List<ProductModel> getAllProducts(){
-    _products = ProductData().products;
-    return _products;
-  }
-  
-  Future<void> getProductFromApi() async {
-    // _products = await ApiManager().getProducts();
-    if (_products.isEmpty) _products.addAll(_products);
-
-  }
+  List<ProductModel> get totalProducts => [..._totalProducts];
 
   Future<void> fetchProducts() async {
     try {
       QuerySnapshot snapshot =
           await FirebaseFirestore.instance.collection('products').get();
-      _products = snapshot.docs
+      _totalProducts = snapshot.docs
           .map((doc) => ProductModel.fromJson(doc.data() as String))
           .toList();
       notifyListeners();
@@ -37,7 +25,7 @@ class ProviderProduct with ChangeNotifier {
       await FirebaseFirestore.instance
           .collection('products')
           .add(product.toJson() as Map<String, dynamic>);
-      _products.add(product);
+      _totalProducts.add(product);
       notifyListeners();
     } catch (error) {
       rethrow;
@@ -46,6 +34,6 @@ class ProviderProduct with ChangeNotifier {
 
   ProductModel findById(String id) {
     // ignore: unrelated_type_equality_checks
-    return _products.firstWhere((prod) => prod.id == id);
+    return _totalProducts.firstWhere((prod) => prod.id == id);
   }
 }

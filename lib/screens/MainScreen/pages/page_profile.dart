@@ -29,27 +29,15 @@ class ProfilePage extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const AccountOptionTile(
-            icon: Icons.local_shipping,
-            title: 'Upcoming Orders',
-            trailing: '0',
-          ),
           AccountOptionTile(
             icon: Icons.favorite_sharp,
             title: "Favourites",
             ontap: () => Navigator.pushNamed(context, '/favourites'),
           ),
-          const AccountOptionTile(
-            icon: Icons.location_on,
-            title: 'Manage Address',
-          ),
-          const AccountOptionTile(
-            icon: Icons.payment,
-            title: 'Update payment',
-          ),
-          const AccountOptionTile(
-            icon: Icons.chat_bubble_outline,
-            title: 'My Chats',
+          AccountOptionTile(
+            icon: Icons.add_box,
+            title: 'My products',
+            ontap: () => Navigator.pushNamed(context, '/myProducts'),
           ),
           AccountOptionTile(
             icon: Icons.logout,
@@ -59,7 +47,7 @@ class ProfilePage extends StatelessWidget {
               Navigator.pushNamedAndRemoveUntil(
                   context, '/', (Route<dynamic> route) => false);
             },
-          )
+          ),
         ],
       ),
     );
