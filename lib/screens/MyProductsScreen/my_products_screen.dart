@@ -20,7 +20,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         title: const Text("MyProducts"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed('/createProduct');
+        },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add),
       ),

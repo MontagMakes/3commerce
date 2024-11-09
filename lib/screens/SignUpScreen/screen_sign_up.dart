@@ -23,6 +23,8 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<ProviderUser>(context);
+
     return Scaffold(
       key: _scaffoldKey,
       body: Container(
@@ -209,70 +211,65 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                 const SizedBox(height: 30),
 
                                 // SignUp button
-                                Consumer<ProviderUser>(
-                                  builder: (context, auth, child) => SizedBox(
-                                      width: double.infinity,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 15.0),
-                                          backgroundColor: Colors.red,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30.0),
-                                          ),
+                                SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 15.0),
+                                        backgroundColor: Colors.red,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
                                         ),
-                                        onPressed: () async {
-                                          String message = "";
+                                      ),
+                                      onPressed: () async {
+                                        String message = "";
 
-                                          if (_formKey.currentState!
-                                              .validate()) {
+                                        if (_formKey.currentState!.validate()) {
+                                          setState(() {
+                                            _isLoading = true;
+                                          });
+                                          try {
+                                            await auth.signUp(
+                                                _emailController.text,
+                                                _passwordController.text,
+                                                _nameController.text);
+
+                                            Navigator.pushNamed(
+                                              // ignore: use_build_context_synchronously
+                                              context,
+                                              "/main",
+                                            );
+
                                             setState(() {
-                                              _isLoading = true;
+                                              _isLoading = false;
                                             });
-                                            try {
-                                              await auth.signUp(
-                                                  _emailController.text,
-                                                  _passwordController.text,
-                                                  _nameController.text);
-
-                                              WidgetsBinding.instance
-                                                  .addPostFrameCallback((_) {
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  "/main",
-                                                );
-                                              });
-
-                                              setState(() {
-                                                _isLoading = false;
-                                              });
-                                            } on FirebaseAuthException catch (e) {
-                                              message = e.code;
-                                              Fluttertoast.showToast(
-                                                msg: message,
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.CENTER,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.white,
-                                                textColor: Colors.black,
-                                                fontSize: 16.0,
-                                              );
-                                              setState(() {
-                                                _isLoading = false;
-                                              });
-                                            }
+                                          } on FirebaseAuthException catch (e) {
+                                            message = e.code;
+                                            Fluttertoast.showToast(
+                                              msg: message,
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.CENTER,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.white,
+                                              textColor: Colors.black,
+                                              fontSize: 16.0,
+                                            );
+                                            setState(() {
+                                              _isLoading = false;
+                                            });
                                           }
-                                        },
-                                        child: const Text(
-                                          'SignUp',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16.0,
-                                          ),
+                                        }
+                                      },
+                                      child: const Text(
+                                        'SignUp',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
                                         ),
-                                      )),
-                                ),
+                                      ),
+                                    )),
                               ],
                             ),
                           ),

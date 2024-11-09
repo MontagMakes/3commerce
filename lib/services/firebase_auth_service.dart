@@ -23,18 +23,14 @@ class FirebaseAuthService with ChangeNotifier {
     }
   }
 
-  Future<UserModel?> signUp(String email, String password, String name) async {
+  Future<UserCredential?> signUp(String email, String password, String name) async {
     try {
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-      _currentUser = UserModel(
-        id: userCredential.user!.uid,
-        name: name,
-        email: email,
-      );
+      
       notifyListeners();
 
-      return _currentUser;
+      return userCredential;
     } catch (error) {
       rethrow;
     }

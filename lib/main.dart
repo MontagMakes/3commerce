@@ -4,6 +4,7 @@ import 'package:e_commerce/providers/provider_favourites.dart';
 import 'package:e_commerce/providers/provider_order.dart';
 import 'package:e_commerce/providers/provider_product.dart';
 import 'package:e_commerce/providers/provider_user.dart';
+import 'package:e_commerce/screens/CreateProductScreen/create_product_screen.dart';
 import 'package:e_commerce/screens/FavouritesScreen/favourites.dart';
 import 'package:e_commerce/screens/ModelViewScreen/model_view.dart';
 import 'package:e_commerce/screens/MainScreen/screen_main.dart';
@@ -53,11 +54,13 @@ class MyApp extends StatelessWidget {
         "/signUp": (context) => const ScreenSignUp(),
         "/main": (context) => const ScreenMain(),
         "/myProducts": (context) => const MyProductsScreen(),
+        
         "/notifications": (context) => const ScreenNotifications(),
         "/checkout": (context) => const ScreenCheckout(),
         "/productDetails": (context) => const ProductDetailsScreen(),
         "/modelView": (context) => const ScreenModelView(),
         "/favourites": (context) => const ScreenFavourites(),
+        "/createProduct": (context) => const CreateProductScreen(),
       },
     );
   }
