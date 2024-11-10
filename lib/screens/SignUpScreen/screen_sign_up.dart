@@ -1,3 +1,4 @@
+import 'package:e_commerce/providers/provider_product.dart';
 import 'package:e_commerce/providers/provider_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<ProviderUser>(context);
+    final productProvider = Provider.of<ProviderProduct>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -235,6 +237,9 @@ class _ScreenSignUpState extends State<ScreenSignUp> {
                                                 _emailController.text,
                                                 _passwordController.text,
                                                 _nameController.text);
+
+                                            await productProvider
+                                                .fetchProducts();
 
                                             Navigator.pushNamed(
                                               // ignore: use_build_context_synchronously
