@@ -57,14 +57,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                 // Add a container with image, title, rating, 3D button, price
                 Container(
-                  
-                  width: double.infinity,
-                  color: Colors.grey,
-                  child: Image.asset(
-                    fit: BoxFit.contain,
-                    productDetails.imageUrl,
-                  ),
-                ),
+                    width: double.infinity,
+                    color: Colors.grey,
+                    child: Image(
+                      image: NetworkImage(productDetails.imageUrl),
+                      fit: BoxFit.contain,
+                    )),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -84,21 +82,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ),
                           ),
-                          Row(
+                          const Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.star_border_outlined,
                                 color: Colors.red,
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 5,
-                              ),
-                              // Rating text
-                              Text(
-                                "${productDetails.rating}",
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                ),
                               ),
                             ],
                           ),

@@ -39,11 +39,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> getProducts(ProviderProduct product) async {
+    await product.fetchProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     final providerProduct = Provider.of<ProviderProduct>(context);
-    List<ProductModel> listOfProducts =
-        providerProduct.totalProducts;
+
+    List<ProductModel> listOfProducts = providerProduct.totalProducts;
 
     List<ProductModel> displayProducts =
         _searchController.text.isEmpty ? listOfProducts : _searchResults;
@@ -66,7 +70,6 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         backgroundColor: Colors.white,
-        
       ),
       body: Padding(
         padding: const EdgeInsets.all(4.0),
@@ -91,8 +94,8 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            product.imageUrl,
+                          Image(
+                            image: NetworkImage(product.imageUrl),
                             height: 120,
                             width: 130,
                           ),
@@ -112,21 +115,14 @@ class _HomePageState extends State<HomePage> {
                                       color: Colors.grey, fontSize: 20),
                                 ),
                                 const SizedBox(width: 70),
-                                Row(
+                                const Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.star_border_outlined,
                                       color: Colors.red,
                                     ),
-                                    const SizedBox(
+                                    SizedBox(
                                       width: 5,
-                                    ),
-                                    // Rating text
-                                    Text(
-                                      "${product.rating}",
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                      ),
                                     ),
                                   ],
                                 ),

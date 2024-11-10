@@ -1,8 +1,23 @@
+import 'package:e_commerce/main.dart';
+import 'package:e_commerce/models/model_product.dart';
 import 'package:e_commerce/models/model_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseFireStoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Future<List<ProductModel>> fetchProducts() async {
+  //   try {
+  //     QuerySnapshot snapshot =
+  //         await FirebaseFirestore.instance.collection('products').get();
+  //     var totalProducts = snapshot.docs
+  //         .map((doc) => ProductModel.fromJson(doc.data() as String))
+  //         .toList();
+  //     return totalProducts;
+  //   } catch (error) {
+  //     rethrow;
+  //   }
+  // }
 
   Future<void> createUser(UserModel? user) async {
     try {
@@ -11,7 +26,7 @@ class FirebaseFireStoreService {
           .doc(user!.id)
           .set(user.toMap());
     } catch (e) {
-      print(e);
+      logger.e(e);
     }
   }
 
@@ -26,5 +41,9 @@ class FirebaseFireStoreService {
     await userRef.update({
       'wishlist': FieldValue.arrayUnion([productId])
     });
+  }
+
+  Future<void> addProduct(ProductModel product) async {
+    await _firestore.collection('products').add(product.toMap());
   }
 }

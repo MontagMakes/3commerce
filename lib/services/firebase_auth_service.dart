@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthService with ChangeNotifier {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   UserModel? _currentUser;
 
   UserModel? get currentUser => _currentUser;
-
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Stream<User?> authStateChanges() {
     return _firebaseAuth.authStateChanges();

@@ -1,3 +1,4 @@
+import 'package:e_commerce/providers/provider_product.dart';
 import 'package:e_commerce/providers/provider_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<ProviderUser>(context);
+    final productProvider = Provider.of<ProviderProduct>(context);
 
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -132,6 +134,8 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                           try {
                             await userProvider.signIn(
                                 _emailController.text, _passwordController.text);
+
+                            await productProvider.fetchProducts();
                             
                             Navigator.pushNamedAndRemoveUntil(
                               // ignore: use_build_context_synchronously

@@ -17,9 +17,11 @@ import 'package:e_commerce/screens/SignUpScreen/screen_sign_up.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 const debugging = false;
+var logger = Logger();
 
 // Main function that starts the app
 void main() async {
@@ -54,7 +56,6 @@ class MyApp extends StatelessWidget {
         "/signUp": (context) => const ScreenSignUp(),
         "/main": (context) => const ScreenMain(),
         "/myProducts": (context) => const MyProductsScreen(),
-        
         "/notifications": (context) => const ScreenNotifications(),
         "/checkout": (context) => const ScreenCheckout(),
         "/productDetails": (context) => const ProductDetailsScreen(),

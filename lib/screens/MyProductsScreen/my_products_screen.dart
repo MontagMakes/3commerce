@@ -60,8 +60,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                 Container(
                     constraints:
                         const BoxConstraints(maxHeight: 100, maxWidth: 100),
-                    child: Image.asset(productProvider.totalProducts[index].imageUrl,
-                        fit: BoxFit.cover)),
+                    child: Image(
+                        image: NetworkImage(
+                            productProvider.totalProducts[index].imageUrl))),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
