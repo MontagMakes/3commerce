@@ -6,19 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirebaseFireStoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Future<List<ProductModel>> fetchProducts() async {
-  //   try {
-  //     QuerySnapshot snapshot =
-  //         await FirebaseFirestore.instance.collection('products').get();
-  //     var totalProducts = snapshot.docs
-  //         .map((doc) => ProductModel.fromJson(doc.data() as String))
-  //         .toList();
-  //     return totalProducts;
-  //   } catch (error) {
-  //     rethrow;
-  //   }
-  // }
-
   Future<void> createUser(UserModel? user) async {
     try {
       await FirebaseFirestore.instance
@@ -36,14 +23,29 @@ class FirebaseFireStoreService {
     return UserModel.fromMap(doc.data() as Map<String, dynamic>);
   }
 
-  Future<void> addProductToWishlist(String userId, String productId) async {
-    DocumentReference userRef = _firestore.collection('users').doc(userId);
-    await userRef.update({
-      'wishlist': FieldValue.arrayUnion([productId])
-    });
+  Future<List<ProductModel>> fetchProductData() async {
+    try {
+      QuerySnapshot snapshot = await _firestore.collection('products').get();
+      return snapshot.docs
+          .map(
+              (doc) => ProductModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      logger.e('Error fetching Products: $e');
+      rethrow;
+    }
   }
 
-  Future<void> addProduct(ProductModel product) async {
-    await _firestore.collection('products').add(product.toMap());
+  Future<String> addProduct(ProductModel product) async {
+    DocumentReference docRef =
+        await _firestore.collection('products').add(product.toMap());
+    String productId = docRef.id;
+
+    await docRef.update({'id': productId});
+    return productId;
+  }
+
+  Future<void> deleteProduct(String productId) async {
+    await _firestore.collection('products').doc(productId).delete();
   }
 }

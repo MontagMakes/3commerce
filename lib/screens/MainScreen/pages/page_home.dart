@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getProducts(ProviderProduct product) async {
-    await product.fetchProducts();
+    await product.fetchProductData();
   }
 
   @override

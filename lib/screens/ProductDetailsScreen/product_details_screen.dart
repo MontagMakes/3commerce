@@ -1,6 +1,5 @@
 import 'package:e_commerce/models/model_product.dart';
 import 'package:e_commerce/providers/provider_cart.dart';
-import 'package:e_commerce/providers/provider_favourites.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +28,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<ProviderCart>(context);
-    final favouriteProvider = Provider.of<ProviderFavourites>(context);
     return SafeArea(
       child: Scaffold(
           backgroundColor: Colors.white,
@@ -46,12 +44,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       icon: const Icon(Icons.arrow_back),
                     ),
                     const Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        favouriteProvider.addItem(productDetails);
-                      },
-                      icon: const Icon(Icons.favorite_border),
-                    ),
                   ],
                 ),
 

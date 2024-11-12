@@ -23,14 +23,14 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         onPressed: () {
           Navigator.of(context).pushNamed('/createProduct');
         },
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.grey[300],
         child: const Icon(Icons.add),
       ),
       body: Container(
         color: Colors.white,
         child: Column(
           children: [
-            productProvider.totalProducts.isEmpty
+            productProvider.myProducts.isEmpty
                 ? const Center(
                     heightFactor: 30,
                     child: Text("List is empty"),
@@ -45,11 +45,11 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
   Expanded _productsList(ProviderProduct productProvider) {
     return Expanded(
         child: ListView(
-      children: List.generate(productProvider.totalProducts.length, (index) {
+      children: List.generate(productProvider.myProducts.length, (index) {
         return GestureDetector(
           onTap: () {
             Navigator.pushNamed(context, '/productDetails',
-                arguments: productProvider.totalProducts[index]);
+                arguments: productProvider.myProducts[index]);
           },
           child: Container(
             color: Colors.white,
@@ -62,23 +62,26 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                         const BoxConstraints(maxHeight: 100, maxWidth: 100),
                     child: Image(
                         image: NetworkImage(
-                            productProvider.totalProducts[index].imageUrl))),
+                            productProvider.myProducts[index].imageUrl))),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(productProvider.totalProducts[index].title,
+                      Text(productProvider.myProducts[index].title,
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4),
-                      Text('\$${productProvider.totalProducts[index].price}',
+                      Text('\$${productProvider.myProducts[index].price}',
                           style: const TextStyle(color: Colors.grey)),
                       const SizedBox(height: 8),
                       Align(
                         alignment: Alignment.centerRight,
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            productProvider.deleteProduct(
+                                productProvider.myProducts[index].id);
+                          },
                           icon: const Icon(Icons.remove_circle_outline),
                         ),
                       )

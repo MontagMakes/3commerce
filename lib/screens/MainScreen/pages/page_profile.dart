@@ -30,11 +30,6 @@ class ProfilePage extends StatelessWidget {
       child: Column(
         children: [
           AccountOptionTile(
-            icon: Icons.favorite_sharp,
-            title: "Favourites",
-            ontap: () => Navigator.pushNamed(context, '/favourites'),
-          ),
-          AccountOptionTile(
             icon: Icons.add_box,
             title: 'My products',
             ontap: () => Navigator.pushNamed(context, '/myProducts'),

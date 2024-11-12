@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:e_commerce/globals.dart';
 import 'package:e_commerce/main.dart';
 import 'package:e_commerce/providers/provider_product.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class CreateProductScreen extends StatefulWidget {
@@ -18,23 +20,28 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _imageController = TextEditingController();
-  final bool _isLoading = false;
+  bool _isLoading = false;
   bool isImageLoaded = false;
   bool isModelLoaded = false;
-  late File _imageFile;
-  late File _modelFile;
+  File? _imageFile;
+  File? _modelFile;
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
     _priceController.dispose();
-    _imageController.dispose();
     super.dispose();
   }
 
+  void isLoading(bool isLoading) {
+    setState(() {
+      _isLoading = isLoading;
+    });
+  }
+
   Future<void> _pickImage() async {
+    isLoading(true);
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.image);
 
@@ -47,12 +54,15 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       isImageLoaded = false;
       logger.e('FilesPicker did not work');
     }
+    isLoading(false);
   }
 
   Future<void> _pickModel() async {
+    isLoading(true);
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.any,
     );
+
     if (result != null) {
       setState(() {
         _modelFile = File(result.files.single.path!);
@@ -61,153 +71,174 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     } else {
       isImageLoaded = false;
     }
+    isLoading(false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Globals.scaffoldKey,
       appBar: AppBar(
         leading: const BackButton(),
         title: const Text('Create Product'),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFFF4081), Color(0xFFFF7043)],
-          ),
-        ),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: Colors.black,
+            ))
+          : SingleChildScrollView(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 20),
 
-        // if the screen is loading, show loadingIndicator else show screen
-        child: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(
-                color: Colors.white,
-              ))
-            : SingleChildScrollView(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 0.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const SizedBox(height: 20),
-
-                      // Form
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          children: <Widget>[
-                            // Title field
-                            TextFormField(
-                              controller: _titleController,
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter the title';
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                labelText: 'Enter title',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
+                    // Form
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
+                          // Title field
+                          TextFormField(
+                            controller: _titleController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter the title';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Enter title',
+                              hintStyle: TextStyle(color: Colors.grey),
                             ),
-                            const SizedBox(height: 20),
+                          ),
+                          const SizedBox(height: 20),
 
-                            // Description Field
-                            TextFormField(
-                              controller: _descriptionController,
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter the description';
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                labelText: 'Enter Description',
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
+                          // Description Field
+                          TextFormField(
+                            controller: _descriptionController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter the description';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Enter Description',
+                              hintStyle: TextStyle(color: Colors.grey),
                             ),
-                            const SizedBox(height: 20),
+                          ),
+                          const SizedBox(height: 20),
 
-                            // Price Field
-                            TextFormField(
-                              controller: _priceController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please enter a price';
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                labelText: 'Enter the Price',
-                              ),
+                          // Price Field
+                          TextFormField(
+                            controller: _priceController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter a price';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Enter the Price',
                             ),
-                            const SizedBox(height: 20),
+                          ),
+                          const SizedBox(height: 20),
 
-                            // Image Field
-                            ElevatedButton(
-                                onPressed: _pickImage,
-                                child: Text(isImageLoaded == false
-                                    ? 'Pick Image'
-                                    : 'Image Selected')),
+                          // Image Field
+                          ElevatedButton(
+                              onPressed: _pickImage,
+                              child: Text(isImageLoaded == false
+                                  ? 'Pick Image'
+                                  : 'Image Selected')),
 
-                            const SizedBox(height: 30),
+                          const SizedBox(height: 10),
 
-                            // Model Field
-                            ElevatedButton(
-                                onPressed: _pickModel,
-                                child: Text(isModelLoaded == false
-                                    ? 'Pick Model'
-                                    : 'Model Selected')),
+                          // Model Field
+                          ElevatedButton(
+                              onPressed: _pickModel,
+                              child: Text(isModelLoaded == false
+                                  ? 'Pick Model'
+                                  : 'Model Selected')),
 
-                            // SignUp button
-                            Consumer<ProviderProduct>(
-                              builder: (context, product, child) => SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 15.0),
-                                      backgroundColor: Colors.red,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30.0),
-                                      ),
+                          const SizedBox(height: 20),
+
+                          // SignUp button
+                          Consumer<ProviderProduct>(
+                            builder: (context, product, child) => SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15.0),
+                                    backgroundColor: Colors.red,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
                                     ),
-                                    onPressed: () {
-                                      product.addProduct(
-                                          _titleController.text,
-                                          _descriptionController.text,
-                                          int.parse(_priceController.text),
-                                          _imageFile,
-                                          _modelFile);
-                                    },
-                                    child: const Text(
-                                      'SignUp',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.0,
-                                      ),
+                                  ),
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      if (_imageFile == null ||
+                                          _modelFile == null) {
+                                        Fluttertoast.showToast(
+                                          msg:
+                                              'Please Select Both Image file and model File to continue.',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.CENTER,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.white,
+                                          textColor: Colors.black,
+                                          fontSize: 16.0,
+                                        );
+                                        return;
+                                      } else {
+                                        isLoading(true);
+                                        try {
+                                          await product.addProduct(
+                                              _titleController.text,
+                                              _descriptionController.text,
+                                              int.parse(_priceController.text),
+                                              _imageFile!,
+                                              _modelFile!);
+                                          await product.fetchProductData();
+                                          Navigator.pushReplacementNamed(
+                                            Globals.scaffoldKey.currentContext!,
+                                            '/main',
+                                          );
+
+                                          isLoading(false);
+                                        } catch (e) {
+                                          logger.e(e);
+                                        }
+                                      }
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Create Product',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
                                     ),
-                                  )),
-                            ),
-                          ],
-                        ),
+                                  ),
+                                )),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-      ),
+            ),
     );
   }
 }

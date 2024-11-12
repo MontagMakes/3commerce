@@ -57,6 +57,10 @@ class ProviderUser with ChangeNotifier {
     return _currentUserData?.name;
   }
 
+  String? getUserId(){
+    return _currentUserData?.id;
+  }
+
   String? getUserEmail() {
     return _currentUserData?.email;
   }

@@ -135,7 +135,7 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                             await userProvider.signIn(
                                 _emailController.text, _passwordController.text);
 
-                            await productProvider.fetchProducts();
+                            await productProvider.fetchProductData();
                             
                             Navigator.pushNamedAndRemoveUntil(
                               // ignore: use_build_context_synchronously
