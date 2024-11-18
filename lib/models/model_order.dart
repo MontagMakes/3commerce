@@ -6,28 +6,36 @@ import 'package:flutter/foundation.dart';
 import 'package:e_commerce/models/model_product.dart';
 
 class OrderModel {
-  final String id;
-  final List<ProductModel> products;
-  final double totalAmount;
-  final DateTime orderDate;
-  final String status;
+  String? id;
+  String? userId;
+  String? address;
+  List<ProductModel> products;
+  double? totalAmount;
+  String? orderDate;
+  String? status;
   OrderModel({
-    required this.id,
+    this.id,
+    this.userId,
+    this.address,
     required this.products,
-    required this.totalAmount,
-    required this.orderDate,
-    required this.status,
+    this.totalAmount,
+    this.orderDate,
+    this.status,
   });
 
   OrderModel copyWith({
     String? id,
+    String? userId,
+    String? address,
     List<ProductModel>? products,
     double? totalAmount,
-    DateTime? orderDate,
+    String? orderDate,
     String? status,
   }) {
     return OrderModel(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
+      address: address ?? this.address,
       products: products ?? this.products,
       totalAmount: totalAmount ?? this.totalAmount,
       orderDate: orderDate ?? this.orderDate,
@@ -38,20 +46,24 @@ class OrderModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'userId': userId,
+      'address': address,
       'products': products.map((x) => x.toMap()).toList(),
       'totalAmount': totalAmount,
-      'orderDate': orderDate.millisecondsSinceEpoch,
+      'orderDate': orderDate,
       'status': status,
     };
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
-      id: map['id'] as String,
-      products: List<ProductModel>.from((map['products'] as List<int>).map<ProductModel>((x) => ProductModel.fromMap(x as Map<String,dynamic>),),),
-      totalAmount: map['totalAmount'] as double,
-      orderDate: DateTime.fromMillisecondsSinceEpoch(map['orderDate'] as int),
-      status: map['status'] as String,
+      id: map['id'] != null ? map['id'] as String : null,
+      userId: map['userId'] != null ? map['userId'] as String : null,
+      address: map['address'] != null ? map['address'] as String : null,
+      products: List<ProductModel>.from((map['products'] as List<dynamic>).map<ProductModel>((x) => ProductModel.fromMap(x as Map<String,dynamic>),),),
+      totalAmount: map['totalAmount'] != null ? map['totalAmount'] as double : null,
+      orderDate: map['orderDate'] != null ? map['orderDate'] as String : null,
+      status: map['status'] != null ? map['status'] as String : null,
     );
   }
 
@@ -61,7 +73,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, products: $products, totalAmount: $totalAmount, orderDate: $orderDate, status: $status)';
+    return 'OrderModel(id: $id, userId: $userId, address: $address, products: $products, totalAmount: $totalAmount, orderDate: $orderDate, status: $status)';
   }
 
   @override
@@ -70,6 +82,8 @@ class OrderModel {
   
     return 
       other.id == id &&
+      other.userId == userId &&
+      other.address == address &&
       listEquals(other.products, products) &&
       other.totalAmount == totalAmount &&
       other.orderDate == orderDate &&
@@ -79,9 +93,11 @@ class OrderModel {
   @override
   int get hashCode {
     return id.hashCode ^
+      userId.hashCode ^
+      address.hashCode ^
       products.hashCode ^
       totalAmount.hashCode ^
       orderDate.hashCode ^
       status.hashCode;
   }
-}
+  }

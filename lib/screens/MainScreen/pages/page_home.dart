@@ -1,3 +1,4 @@
+import 'package:e_commerce/globals.dart';
 import 'package:e_commerce/models/model_product.dart';
 import 'package:e_commerce/providers/provider_product.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   late TextEditingController _searchController;
 
   List<ProductModel> _searchResults = [];
+  String filter = '';
 
   @override
   void initState() {
@@ -43,14 +45,28 @@ class _HomePageState extends State<HomePage> {
     await product.fetchProductData();
   }
 
+  List<ProductModel> displayProductsF(List<ProductModel> listOfProducts) {
+    if (_searchController.text.isEmpty) {
+      if (filter == '') {
+        return listOfProducts;
+      } else {
+        return listOfProducts
+            .where((element) => element.category == filter)
+            .toList();
+      }
+    } else {
+      return _searchResults;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final providerProduct = Provider.of<ProviderProduct>(context);
 
     List<ProductModel> listOfProducts = providerProduct.totalProducts;
 
-    List<ProductModel> displayProducts =
-        _searchController.text.isEmpty ? listOfProducts : _searchResults;
+    List<ProductModel> displayProducts = displayProductsF(listOfProducts);
+    _searchController.text.isEmpty ? listOfProducts : _searchResults;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -70,6 +86,46 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                      title: const Text('Filter'),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            for (var category in Globals.categories)
+                              ListTile(
+                                title: Text(category),
+                                onTap: () {
+                                  if (filter != category) {
+                                    setState(() {
+                                      filter = category;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      filter = '';
+                                    });
+                                  }
+
+                                  Navigator.pop(context);
+                                },
+                                trailing: filter == category
+                                    ? const Icon(Icons.check)
+                                    : null,
+                              ),
+                          ],
+                        ),
+                      ));
+                },
+              );
+            },
+            icon: const Icon(Icons.filter_list),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(4.0),

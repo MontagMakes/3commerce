@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/main.dart';
 import 'package:e_commerce/models/model_product.dart';
 import 'package:e_commerce/providers/provider_user.dart';
@@ -24,48 +23,9 @@ class ProviderProduct with ChangeNotifier {
     _providerUser = providerUser;
     notifyListeners();
   }
-
-  // Future<void> fetchMyProducts() async {
-  //   try {
-  //     QuerySnapshot snapshot = await FirebaseFirestore.instance
-  //         .collection('products')
-  //         .where('ownerID', isEqualTo: _providerUser!.getUserId().toString())
-  //         .get();
-  //     _myProducts = snapshot.docs
-  //         .map(
-  //             (doc) => ProductModel.fromMap(doc.data() as Map<String, dynamic>))
-  //         .toList();
-  //   } catch (e) {
-  //     logger.e('Error fetching my Products: $e');
-  //     rethrow;
-  //   }
-  // }
-
-  // Future<void> fetchTotalProducts() async {
-  //   try {
-  //     QuerySnapshot snapshot =
-  //         await FirebaseFirestore.instance.collection('products').get();
-  //     _totalProducts = snapshot.docs
-  //         .map(
-  //             (doc) => ProductModel.fromMap(doc.data() as Map<String, dynamic>))
-  //         .toList();
-  //     fetchMyProducts();
-  //     notifyListeners();
-  //   } catch (error) {
-  //     rethrow;
-  //   }
-  // }
-
+  
   Future<void> fetchProductData() async {
     try {
-      if (_providerUser == null) {
-        throw Exception('ProviderUser is not set');
-      }
-
-      final userId = _providerUser?.getUserId();
-      if (userId == null) {
-        throw Exception('User ID is null');
-      }
       _totalProducts = await _fireStoreService.fetchProductData();
       _myProducts = _totalProducts
           .where((element) =>
@@ -79,7 +39,7 @@ class ProviderProduct with ChangeNotifier {
   }
 
   // Add product to FirebaseFirestore and FirebaseStorage
-  Future<void> addProduct(String title, String description, int price,
+  Future<void> addProduct(String title, String description, int price, String category,
       File imageFile, File modelFile) async {
     // Upload image and model files to FirebaseStorage
     var imageUrl = await _storageService.uploadImageFile(imageFile);
@@ -91,6 +51,7 @@ class ProviderProduct with ChangeNotifier {
         title: title,
         description: description,
         price: price,
+        category: category,
         ownerID: _providerUser!.getUserId().toString(),
         imageUrl: imageUrl,
         modelUrl: modelUrl);
@@ -105,7 +66,7 @@ class ProviderProduct with ChangeNotifier {
   }
 
   // Delete product from FirebaseFirestore and FirebaseStorage
-  void deleteProduct(String productId) async {
+  Future<void> deleteProduct(String productId) async {
     try {
       // Delete product image from FirebaseStorage
       await _storageService.deleteFile(_myProducts

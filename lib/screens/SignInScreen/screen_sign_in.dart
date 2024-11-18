@@ -1,3 +1,4 @@
+import 'package:e_commerce/globals.dart';
 import 'package:e_commerce/screens/SignInScreen/widgets/sign_in_get_started_button.dart';
 import 'package:e_commerce/screens/SignInScreen/widgets/sign_in_btn.dart';
 import 'package:e_commerce/screens/SignInScreen/widgets/sign_in_title.dart';
@@ -39,6 +40,7 @@ class _SignInScreenState extends State<SignInScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Globals.scaffoldKey,
       // Page background color
       body: Container(
         decoration: const BoxDecoration(

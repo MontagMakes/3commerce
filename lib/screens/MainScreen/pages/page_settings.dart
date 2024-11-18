@@ -35,6 +35,11 @@ class ProfilePage extends StatelessWidget {
             ontap: () => Navigator.pushNamed(context, '/myProducts'),
           ),
           AccountOptionTile(
+            icon: Icons.local_shipping,
+            title: 'My Orders',
+            ontap: () => Navigator.pushNamed(context, '/orderHistory'),
+          ),
+          AccountOptionTile(
             icon: Icons.logout,
             title: 'Sign Out',
             ontap: () async {

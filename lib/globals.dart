@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class Globals {
   static const List<String> categories = [
-    "Category 1",
-    "Category 2",
-    "Category 3",
-    "Category 4",
-    "Category 5",
+    "Electronics",
+    "Furnitures",
+    "Sports",
+    "Toys",
+    "Fashion",
   ];
 
   static GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

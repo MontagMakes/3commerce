@@ -1,17 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-
-
 //Create a UserModel model
 class UserModel {
   final String? id;
-  String? name = "";
+  final String? name;
   final String? email;
   UserModel({
-    required this.id,
-    required this.name,
-    required this.email,
+    this.id,
+    this.name,
+    this.email,
   });
 
   UserModel copyWith({
@@ -36,15 +34,16 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      email: map['email'] as String,
+      id: map['id'] != null ? map['id'] as String : null,
+      name: map['name'] != null ? map['name'] as String : null,
+      email: map['email'] != null ? map['email'] as String : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'UserModel(id: $id, name: $name, email: $email)';
@@ -52,11 +51,8 @@ class UserModel {
   @override
   bool operator ==(covariant UserModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.name == name &&
-      other.email == email;
+
+    return other.id == id && other.name == name && other.email == email;
   }
 
   @override

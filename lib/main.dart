@@ -8,8 +8,9 @@ import 'package:e_commerce/screens/ModelViewScreen/model_view.dart';
 import 'package:e_commerce/screens/MainScreen/screen_main.dart';
 import 'package:e_commerce/screens/CheckoutScreen/screen_checkout.dart';
 import 'package:e_commerce/screens/MyProductsScreen/my_products_screen.dart';
+import 'package:e_commerce/screens/OrderDetailsScreen/order_details_screen.dart';
+import 'package:e_commerce/screens/OrderHistory/screen_order_history.dart';
 import 'package:e_commerce/screens/SignInScreen/screen_sign_in.dart';
-import 'package:e_commerce/screens/NotificationsScreen/screen_notifications.dart';
 import 'package:e_commerce/screens/ProductDetailsScreen/product_details_screen.dart';
 import 'package:e_commerce/screens/SignUpScreen/screen_sign_up.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -47,6 +48,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white
+      ),
 
       // using named routes, for better routing
       routes: {
@@ -54,7 +58,8 @@ class MyApp extends StatelessWidget {
         "/signUp": (context) => const ScreenSignUp(),
         "/main": (context) => const ScreenMain(),
         "/myProducts": (context) => const MyProductsScreen(),
-        "/notifications": (context) => const ScreenNotifications(),
+        "/orderHistory": (context) => const ScreenOrderHistory(),
+        // "/orderDetails": (context) => const ScreenOrderDetails(),
         "/checkout": (context) => const ScreenCheckout(),
         "/productDetails": (context) => const ProductDetailsScreen(),
         "/modelView": (context) => const ScreenModelView(),

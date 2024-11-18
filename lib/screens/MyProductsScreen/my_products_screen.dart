@@ -10,6 +10,14 @@ class MyProductsScreen extends StatefulWidget {
 }
 
 class _MyProductsScreenState extends State<MyProductsScreen> {
+  bool _isLoading = false;
+
+  void isLoading(bool value) {
+    setState(() {
+      _isLoading = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProviderProduct>(context);
@@ -26,19 +34,21 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         backgroundColor: Colors.grey[300],
         child: const Icon(Icons.add),
       ),
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            productProvider.myProducts.isEmpty
-                ? const Center(
-                    heightFactor: 30,
-                    child: Text("List is empty"),
-                  )
-                : _productsList(productProvider)
-          ],
-        ),
-      ),
+      body: _isLoading == true
+          ? const Center(child: CircularProgressIndicator())
+          : Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  productProvider.myProducts.isEmpty
+                      ? const Center(
+                          heightFactor: 30,
+                          child: Text("List is empty"),
+                        )
+                      : _productsList(productProvider)
+                ],
+              ),
+            ),
     );
   }
 
@@ -78,9 +88,11 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: IconButton(
-                          onPressed: () {
-                            productProvider.deleteProduct(
+                          onPressed: () async {
+                            isLoading(true);
+                            await productProvider.deleteProduct(
                                 productProvider.myProducts[index].id);
+                            isLoading(false);
                           },
                           icon: const Icon(Icons.remove_circle_outline),
                         ),

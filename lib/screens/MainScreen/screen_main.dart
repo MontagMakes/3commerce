@@ -1,6 +1,6 @@
 import 'package:e_commerce/screens/MainScreen/pages/page_cart.dart';
 import 'package:e_commerce/screens/MainScreen/pages/page_home.dart';
-import 'package:e_commerce/screens/MainScreen/pages/page_profile.dart';
+import 'package:e_commerce/screens/MainScreen/pages/page_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -79,7 +79,7 @@ class _ScreenMainState extends State<ScreenMain> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              label: 'Profile',
+              label: 'settings',
             ),
           ],
         ),

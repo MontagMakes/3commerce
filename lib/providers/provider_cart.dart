@@ -20,7 +20,7 @@ class ProviderCart with ChangeNotifier {
     return _items;
   }
 
-  void addItem(ProductModel product, int quantity) {
+  void addItem(ProductModel product) {
     _items.add(product);
     notifyListeners();
   }
@@ -35,6 +35,6 @@ class ProviderCart with ChangeNotifier {
     notifyListeners();
   }
 
-   int getCartLength(){
+  int getCartLength(){
     return _items.length;}
 }

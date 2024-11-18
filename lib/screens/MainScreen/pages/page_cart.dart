@@ -10,6 +10,7 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<ProviderCart>(context);
+    
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
@@ -43,10 +44,14 @@ class CartPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                  constraints:
-                      const BoxConstraints(maxHeight: 100, maxWidth: 100),
-                  child: Image.asset(cartProvider.items[index].imageUrl,
-                      fit: BoxFit.cover)),
+                constraints:
+                    const BoxConstraints(maxHeight: 100, maxWidth: 100),
+                child: Image(
+                    image: NetworkImage(
+                      cartProvider.items[index].imageUrl,
+                    ),
+                    fit: BoxFit.cover),
+              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(

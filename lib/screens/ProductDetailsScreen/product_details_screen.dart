@@ -17,7 +17,6 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   late ProductModel productDetails;
   bool isfavourite = false;
-  int _count = 1;
 
   @override
   void didChangeDependencies() {
@@ -30,24 +29,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final cartProvider = Provider.of<ProviderCart>(context);
     return SafeArea(
       child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Product Details"),
+          ),
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: Column(
               children: [
-                // Add a row with back button and favorite icon
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-
-                // Add a container with image, title, rating, 3D button, price
+                // Add a container with image, title, 3D button, price
                 Container(
                     width: double.infinity,
                     color: Colors.grey,
@@ -73,17 +62,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                          const Row(
-                            children: [
-                              Icon(
-                                Icons.star_border_outlined,
-                                color: Colors.red,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                            ],
                           ),
 
                           // 3D button
@@ -121,6 +99,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ],
                       ),
                       const SizedBox(height: 20),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            productDetails.category,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Product description
                       Text(
                         productDetails.description,
                         textAlign: TextAlign.justify,
@@ -130,15 +122,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          amountButton(),
+                          // Add to cart button
                           GestureDetector(
                             onTap: () {
-                              for (var i = 0; i < _count; i++) {
-                                cartProvider.addItem(productDetails, _count);
-                              }
+                              cartProvider.addItem(productDetails);
+
                               Fluttertoast.showToast(
                                 msg: "Product added to cart",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -188,44 +180,5 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           )),
     );
-  }
-
-  Container amountButton() {
-    return Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFF7080), Color(0xFFFF4081)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(50),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            IconButton(
-              icon:
-                  const Icon(Icons.remove_circle_outline, color: Colors.white),
-              onPressed: () {
-                setState(() {
-                  if (_count > 0) _count--;
-                });
-              },
-            ),
-            Text(
-              '$_count',
-              style: const TextStyle(fontSize: 20, color: Colors.white),
-            ),
-            IconButton(
-              icon: const Icon(Icons.add_circle_outline, color: Colors.white),
-              onPressed: () {
-                setState(() {
-                  _count++;
-                });
-              },
-            ),
-          ],
-        ));
   }
 }

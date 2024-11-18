@@ -1,4 +1,5 @@
 import 'package:e_commerce/globals.dart';
+import 'package:e_commerce/providers/provider_order.dart';
 import 'package:e_commerce/providers/provider_product.dart';
 import 'package:e_commerce/providers/provider_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,58 +28,61 @@ class BtnFormFieldSignUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ProviderUser, ProviderProduct>(
-      builder: (context, providerUser, providerProduct, child) => SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),
+    ProviderProduct providerProduct = Provider.of<ProviderProduct>(context);
+    ProviderUser providerUser = Provider.of<ProviderUser>(context);
+    ProviderOrder providerOrder = Provider.of<ProviderOrder>(context);
+
+    return SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            backgroundColor: Colors.red,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
             ),
-            onPressed: () async {
-              String message = "";
+          ),
+          onPressed: () async {
+            String message = "";
 
-              if (_formKey.currentState!.validate()) {
-                updateLoadingState(true);
-                try {
-                  await providerUser.signUp(_emailController.text,
-                      _passwordController.text, _nameController.text);
+            if (_formKey.currentState!.validate()) {
+              updateLoadingState(true);
+              try {
+                await providerUser.signUp(_emailController.text,
+                    _passwordController.text, _nameController.text);
 
-                  await providerProduct.fetchProductData();
+                await providerProduct.fetchProductData();
+                await providerOrder.fetchOrders();
 
-                  Navigator.pushReplacementNamed(
-                    // ignore: use_build_context_synchronously
-                    Globals.scaffoldKey.currentContext!,
-                    "/main",
-                  );
+                Navigator.pushReplacementNamed(
+                  // ignore: use_build_context_synchronously
+                  Globals.scaffoldKey.currentContext!,
+                  "/main",
+                );
 
-                  updateLoadingState(false);
-                } on FirebaseAuthException catch (e) {
-                  message = e.code;
-                  Fluttertoast.showToast(
-                    msg: message,
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.white,
-                    textColor: Colors.black,
-                    fontSize: 16.0,
-                  );
-                  updateLoadingState(false);
-                }
+                updateLoadingState(false);
+              } on FirebaseAuthException catch (e) {
+                message = e.code;
+                Fluttertoast.showToast(
+                  msg: message,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.black,
+                  fontSize: 16.0,
+                );
+                updateLoadingState(false);
               }
-            },
-            child: const Text(
-              'SignUp',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-              ),
+            }
+          },
+          child: const Text(
+            'SignUp',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
             ),
-          )),
-    );
+          ),
+        ));
   }
 }

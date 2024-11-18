@@ -1,3 +1,5 @@
+import 'package:e_commerce/globals.dart';
+import 'package:e_commerce/providers/provider_order.dart';
 import 'package:e_commerce/providers/provider_product.dart';
 import 'package:e_commerce/providers/provider_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +15,7 @@ class SignInBottomSheet extends StatefulWidget {
 }
 
 class _SignInBottomSheetState extends State<SignInBottomSheet> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _signInFormKey = GlobalKey<FormState>();
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   bool _isPasswordVisible = false;
@@ -36,10 +38,10 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<ProviderUser>(context);
-    final productProvider = Provider.of<ProviderProduct>(context);
 
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
@@ -54,12 +56,11 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                 color: Colors.black,
               ))
             : Form(
-                key: _formKey,
+                key: _signInFormKey,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-
                     // SignIn label
                     const Text('SIGN IN',
                         style: TextStyle(
@@ -124,62 +125,68 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                     const SizedBox(height: 20),
 
                     // SignIn Button
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            _isLoading = true;
-                          });
-
-                          try {
-                            await userProvider.signIn(
-                                _emailController.text, _passwordController.text);
-
-                            await productProvider.fetchProductData();
-                            
-                            Navigator.pushNamedAndRemoveUntil(
-                              // ignore: use_build_context_synchronously
-                              context,
-                              "/main",
-                              (route) => false,
-                            );
-                          } on FirebaseAuthException catch (e) {
-                            String message;
-                            switch (e.code) {
-                              case 'user-not-found':
-                                message = 'No user found for that email.';
-                                break;
-                              case 'wrong-password':
-                                message = 'Wrong password provided.';
-                                break;
-                              case 'invalid-email':
-                                message = 'Invalid email provided.';
-                                break;
-                              default:
-                                message = 'An error occurred. Please try again.';
-                            }
-
-                            Fluttertoast.showToast(
-                                msg: "Login Failed: $message",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.white,
-                                textColor: Colors.black,
-                                fontSize: 16.0);
-                          } finally {
+                    Consumer2<ProviderProduct, ProviderOrder>(
+                      builder:
+                          (context, productProvider, orderProvider, child) =>
+                              ElevatedButton(
+                        onPressed: () async {
+                          if (_signInFormKey.currentState!.validate()) {
                             setState(() {
-                              _isLoading = false;
+                              _isLoading = true;
                             });
+
+                            try {
+                              await userProvider.signIn(_emailController.text,
+                                  _passwordController.text);
+
+                              await productProvider.fetchProductData();
+                              await orderProvider.fetchOrders();
+
+                              Navigator.pushNamedAndRemoveUntil(
+                                // ignore: use_build_context_synchronously
+                                Globals.scaffoldKey.currentContext!,
+                                "/main",
+                                (route) => false,
+                              );
+                            } on FirebaseAuthException catch (e) {
+                              String message;
+                              switch (e.code) {
+                                case 'user-not-found':
+                                  message = 'No user found for that email.';
+                                  break;
+                                case 'wrong-password':
+                                  message = 'Wrong password provided.';
+                                  break;
+                                case 'invalid-email':
+                                  message = 'Invalid email provided.';
+                                  break;
+                                default:
+                                  message =
+                                      'An error occurred. Please try again.';
+                              }
+
+                              Fluttertoast.showToast(
+                                  msg: "Login Failed: $message",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.white,
+                                  textColor: Colors.black,
+                                  fontSize: 16.0);
+                            } finally {
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            }
                           }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFF4081),
-                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFF4081),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        child: const Text('SIGN IN',
+                            style: TextStyle(color: Colors.white)),
                       ),
-                      child: const Text('SIGN IN',
-                          style: TextStyle(color: Colors.white)),
                     ),
                     const SizedBox(height: 10),
 

@@ -20,6 +20,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  String? _selectedOption;
   bool _isLoading = false;
   bool isImageLoaded = false;
   bool isModelLoaded = false;
@@ -37,6 +38,12 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   void isLoading(bool isLoading) {
     setState(() {
       _isLoading = isLoading;
+    });
+  }
+
+  void selectedOption(String value) {
+    setState(() {
+      _selectedOption = value;
     });
   }
 
@@ -155,6 +162,29 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                           ),
                           const SizedBox(height: 20),
 
+                          DropdownButtonFormField(
+                            items: Globals.categories.map((String option) {
+                              return DropdownMenuItem<String>(
+                                value: option,
+                                child: Text(option),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) =>
+                                selectedOption(value!),
+                            value: _selectedOption,
+                            decoration: const InputDecoration(
+                                labelText: 'Select Category'),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a category';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+
                           // Image Field
                           ElevatedButton(
                               onPressed: _pickImage,
@@ -208,6 +238,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                               _titleController.text,
                                               _descriptionController.text,
                                               int.parse(_priceController.text),
+                                              _selectedOption.toString(),
                                               _imageFile!,
                                               _modelFile!);
                                           await product.fetchProductData();

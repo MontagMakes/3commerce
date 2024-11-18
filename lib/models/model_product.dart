@@ -6,6 +6,7 @@ class ProductModel {
   final String title;
   final String description;
   final int price;
+  final String category;
   final String ownerID;
   final String imageUrl;
   final String modelUrl;
@@ -14,17 +15,18 @@ class ProductModel {
     required this.title,
     required this.description,
     required this.price,
+    required this.category,
     required this.ownerID,
     required this.imageUrl,
     required this.modelUrl,
   });
-  
 
   ProductModel copyWith({
     String? id,
     String? title,
     String? description,
     int? price,
+    String? category,
     String? ownerID,
     String? imageUrl,
     String? modelUrl,
@@ -34,6 +36,7 @@ class ProductModel {
       title: title ?? this.title,
       description: description ?? this.description,
       price: price ?? this.price,
+      category: category ?? this.category,
       ownerID: ownerID ?? this.ownerID,
       imageUrl: imageUrl ?? this.imageUrl,
       modelUrl: modelUrl ?? this.modelUrl,
@@ -46,6 +49,7 @@ class ProductModel {
       'title': title,
       'description': description,
       'price': price,
+      'category': category,
       'ownerID': ownerID,
       'imageUrl': imageUrl,
       'modelUrl': modelUrl,
@@ -58,6 +62,7 @@ class ProductModel {
       title: map['title'] as String,
       description: map['description'] as String,
       price: map['price'] as int,
+      category: map['category'] as String,
       ownerID: map['ownerID'] as String,
       imageUrl: map['imageUrl'] as String,
       modelUrl: map['modelUrl'] as String,
@@ -66,35 +71,37 @@ class ProductModel {
 
   String toJson() => json.encode(toMap());
 
-  factory ProductModel.fromJson(String source) => ProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ProductModel.fromJson(String source) =>
+      ProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, title: $title, description: $description, price: $price, ownerID: $ownerID, imageUrl: $imageUrl, modelUrl: $modelUrl)';
+    return 'ProductModel(id: $id, title: $title, description: $description, price: $price, category: $category, ownerID: $ownerID, imageUrl: $imageUrl, modelUrl: $modelUrl)';
   }
 
   @override
   bool operator ==(covariant ProductModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.title == title &&
-      other.description == description &&
-      other.price == price &&
-      other.ownerID == ownerID &&
-      other.imageUrl == imageUrl &&
-      other.modelUrl == modelUrl;
+
+    return other.id == id &&
+        other.title == title &&
+        other.description == description &&
+        other.price == price &&
+        other.category == category &&
+        other.ownerID == ownerID &&
+        other.imageUrl == imageUrl &&
+        other.modelUrl == modelUrl;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      title.hashCode ^
-      description.hashCode ^
-      price.hashCode ^
-      ownerID.hashCode ^
-      imageUrl.hashCode ^
-      modelUrl.hashCode;
+        title.hashCode ^
+        description.hashCode ^
+        price.hashCode ^
+        category.hashCode ^
+        ownerID.hashCode ^
+        imageUrl.hashCode ^
+        modelUrl.hashCode;
   }
 }
