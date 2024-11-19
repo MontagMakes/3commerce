@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:e_commerce/main.dart';
 import 'package:e_commerce/models/product_model.dart';
-import 'package:e_commerce/providers/provider_user.dart';
+import 'package:e_commerce/providers/user_provider.dart';
 import 'package:e_commerce/services/firebase_firestore_service.dart';
 import 'package:e_commerce/services/firebase_storage_service.dart';
 import 'package:flutter/material.dart';

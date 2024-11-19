@@ -1,6 +1,7 @@
+import 'package:e_commerce/globals.dart';
 import 'package:e_commerce/screens/sign_in_screen/widgets/sign_In_widget.dart';
-import 'package:e_commerce/screens/sign_in_screen/widgets/sign_in_get_started_button.dart';
 import 'package:e_commerce/screens/sign_in_screen/widgets/sign_in_btn.dart';
+import 'package:e_commerce/screens/sign_in_screen/widgets/sign_in_get_started_button.dart';
 import 'package:e_commerce/screens/sign_in_screen/widgets/sign_in_title.dart';
 import 'package:flutter/material.dart';
 
@@ -41,6 +42,8 @@ class _SignInScreenState extends State<SignInScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Globals.scaffoldKey,
+
       // Page background color
       body: Container(
         decoration: const BoxDecoration(
@@ -61,10 +64,8 @@ class _SignInScreenState extends State<SignInScreen>
             const SignInGetStartedBtn(),
             const SizedBox(height: 20),
 
-            const Positioned(
-                left: 0, right: 0, bottom: 10, child: SignInWidget()),
             // SignIn Button
-            // SignInBtn(controller: _controller),
+            SignInBtn(controller: _controller),
           ],
         ),
       ),

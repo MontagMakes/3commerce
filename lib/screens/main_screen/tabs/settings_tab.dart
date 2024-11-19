@@ -1,4 +1,4 @@
-import 'package:e_commerce/providers/provider_user.dart';
+import 'package:e_commerce/providers/user_provider.dart';
 import 'package:e_commerce/screens/create_product_screen.dart/create_product_screen.dart';
 import 'package:e_commerce/screens/my_products_screen/my_products_screen.dart';
 import 'package:e_commerce/screens/order_history_screen/order_history_screen.dart';
@@ -16,7 +16,10 @@ class SettingsTab extends StatelessWidget {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       body: Column(
-        children: [_profileSection(userProvider), _accountOptions(context, userProvider)],
+        children: [
+          _profileSection(userProvider),
+          _accountOptions(context, userProvider)
+        ],
       ),
     );
   }
@@ -61,10 +64,11 @@ class SettingsTab extends StatelessWidget {
             title: 'Sign Out',
             ontap: () async {
               await userProvider.signOut();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SignInScreen()));
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const SignInScreen()),
+                (route) => false,
+              );
             },
           ),
         ],

@@ -1,10 +1,10 @@
-import 'package:e_commerce/models/model_user.dart';
+import 'package:e_commerce/models/user_model.dart';
 import 'package:e_commerce/services/firebase_auth_service.dart';
 import 'package:e_commerce/services/firebase_firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ProviderUser with ChangeNotifier {
+class UserProvider with ChangeNotifier {
   final FirebaseAuthService _authService = FirebaseAuthService();
   final FirebaseFireStoreService _fireStoreService = FirebaseFireStoreService();
 

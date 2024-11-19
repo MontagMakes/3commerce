@@ -1,6 +1,8 @@
+import 'package:e_commerce/globals.dart';
 import 'package:e_commerce/providers/order_provider.dart';
 import 'package:e_commerce/providers/product_provider.dart';
-import 'package:e_commerce/providers/provider_user.dart';
+import 'package:e_commerce/providers/user_provider.dart';
+import 'package:e_commerce/screens/main_screen/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,7 +29,8 @@ class SignUpFormBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ProductProvider productProvider = Provider.of<ProductProvider>(context);
+    final ProductProvider productProvider =
+        Provider.of<ProductProvider>(context);
     UserProvider userProvider = Provider.of<UserProvider>(context);
     OrderProvider orderProvider = Provider.of<OrderProvider>(context);
 
@@ -52,11 +55,12 @@ class SignUpFormBtn extends StatelessWidget {
 
                 await productProvider.fetchProductData();
                 await orderProvider.fetchOrders();
-                // Navigator.pushReplacement(
-                //     Globals.scaffoldKey.currentContext!,
-                //     MaterialPageRoute(
-                //       builder: (context) => const MainScreen(),
-                //     ));
+                Navigator.pushAndRemoveUntil(
+                    Globals.scaffoldKey.currentContext!,
+                    MaterialPageRoute(
+                      builder: (context) => const MainScreen(),
+                    ),
+                    (route) => false);
                 updateLoadingState(false);
               } on FirebaseAuthException catch (e) {
                 message = e.code;

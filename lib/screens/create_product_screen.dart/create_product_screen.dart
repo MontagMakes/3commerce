@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:e_commerce/globals.dart';
 import 'package:e_commerce/main.dart';
 import 'package:e_commerce/providers/product_provider.dart';
+import 'package:e_commerce/screens/main_screen/main_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -84,7 +85,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // key: Globals.scaffoldKey,
+      key: Globals.scaffoldKey,
       appBar: AppBar(
         leading: const BackButton(),
         title: const Text('Create Product'),
@@ -233,6 +234,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                         return;
                                       } else {
                                         isLoading(true);
+                                        logger.d('Product Creating');
                                         try {
                                           await product.addProduct(
                                               _titleController.text,
@@ -242,13 +244,14 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                               _imageFile!,
                                               _modelFile!);
 
-                                          // Navigator.pushReplacement(
-                                          //     // Globals.scaffoldKey.currentContext!,
-                                          //     MaterialPageRoute(
-                                          //       builder: (context) =>
-                                          //           const MainScreen(),
-                                          //     ));
-
+                                          Navigator.pushReplacement(
+                                              Globals
+                                                  .scaffoldKey.currentContext!,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MainScreen(),
+                                              ));
+                                          logger.d('Product Created');
                                           isLoading(false);
                                         } catch (e) {
                                           logger.e(e);

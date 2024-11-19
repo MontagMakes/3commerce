@@ -1,7 +1,7 @@
 import 'package:e_commerce/globals.dart';
 import 'package:e_commerce/providers/order_provider.dart';
 import 'package:e_commerce/providers/product_provider.dart';
-import 'package:e_commerce/providers/provider_user.dart';
+import 'package:e_commerce/providers/user_provider.dart';
 import 'package:e_commerce/screens/main_screen/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -142,13 +142,14 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
 
                               await productProvider.fetchProductData();
                               await orderProvider.fetchOrders();
-                              if (context.mounted) {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MainScreen()));
-                              }
+                              
+                              Navigator.pushAndRemoveUntil(
+                                Globals.scaffoldKey.currentContext!,
+                                MaterialPageRoute(
+                                  builder: (context) => const MainScreen(),
+                                ),
+                                (route) => false,
+                              );
                             } on FirebaseAuthException catch (e) {
                               String message;
                               switch (e.code) {

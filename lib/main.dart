@@ -1,18 +1,9 @@
 import 'package:e_commerce/firebase_options.dart';
-import 'package:e_commerce/providers/provider_cart.dart';
-import 'package:e_commerce/providers/provider_order.dart';
-import 'package:e_commerce/providers/provider_product.dart';
-import 'package:e_commerce/providers/provider_user.dart';
-import 'package:e_commerce/screens/CreateProductScreen/create_product_screen.dart';
-import 'package:e_commerce/screens/ModelViewScreen/model_view.dart';
-import 'package:e_commerce/screens/MainScreen/screen_main.dart';
-import 'package:e_commerce/screens/CheckoutScreen/screen_checkout.dart';
-import 'package:e_commerce/screens/MyProductsScreen/my_products_screen.dart';
-import 'package:e_commerce/screens/OrderDetailsScreen/order_details_screen.dart';
-import 'package:e_commerce/screens/OrderHistory/screen_order_history.dart';
-import 'package:e_commerce/screens/SignInScreen/screen_sign_in.dart';
-import 'package:e_commerce/screens/ProductDetailsScreen/product_details_screen.dart';
-import 'package:e_commerce/screens/SignUpScreen/screen_sign_up.dart';
+import 'package:e_commerce/providers/cart_provider.dart';
+import 'package:e_commerce/providers/order_provider.dart';
+import 'package:e_commerce/providers/product_provider.dart';
+import 'package:e_commerce/providers/user_provider.dart';
+import 'package:e_commerce/screens/sign_in_screen/sign_in_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -29,14 +20,14 @@ void main() async {
 
   // Using provider functions for state management
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => ProviderUser()),
-    ChangeNotifierProxyProvider<ProviderUser, ProviderProduct>(
-      create: (context) => ProviderProduct(),
+    ChangeNotifierProvider(create: (context) => UserProvider()),
+    ChangeNotifierProxyProvider<UserProvider, ProductProvider>(
+      create: (context) => ProductProvider(),
       update: (context, providerUser, productProvider) =>
-          productProvider!..updateProviderUser(providerUser),
+          productProvider!..updateUserProvider(providerUser),
     ),
-    ChangeNotifierProvider(create: (context) => ProviderCart()),
-    ChangeNotifierProvider(create: (context) => ProviderOrder()),
+    ChangeNotifierProvider(create: (context) => CartProvider()),
+    ChangeNotifierProvider(create: (context) => OrderProvider()),
   ], child: const MyApp()));
 }
 
@@ -51,20 +42,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white
       ),
-
-      // using named routes, for better routing
-      routes: {
-        "/": (context) => const SignInScreen(),
-        "/signUp": (context) => const ScreenSignUp(),
-        "/main": (context) => const ScreenMain(),
-        "/myProducts": (context) => const MyProductsScreen(),
-        "/orderHistory": (context) => const ScreenOrderHistory(),
-        // "/orderDetails": (context) => const ScreenOrderDetails(),
-        "/checkout": (context) => const ScreenCheckout(),
-        "/productDetails": (context) => const ProductDetailsScreen(),
-        "/modelView": (context) => const ScreenModelView(),
-        "/createProduct": (context) => const CreateProductScreen(),
-      },
+      home: const SignInScreen(),
     );
   }
 }
