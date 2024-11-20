@@ -39,7 +39,7 @@ class ProductProvider with ChangeNotifier {
   }
 
   // Add product to FirebaseFirestore and FirebaseStorage
-  Future<void> addProduct(String title, String description, int price, String category,
+  Future<void> createProduct(String title, String description, int price, String category,
       File imageFile, File modelFile) async {
     // Upload image and model files to FirebaseStorage
     var imageUrl = await _storageService.uploadImageFile(imageFile);
@@ -56,7 +56,7 @@ class ProductProvider with ChangeNotifier {
         imageUrl: imageUrl,
         modelUrl: modelUrl);
 
-    String productId = await _fireStoreService.addProduct(product);
+    String productId = await _fireStoreService.createProduct(product);
 
     product = product.copyWith(id: productId);
 

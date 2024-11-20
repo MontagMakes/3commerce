@@ -236,7 +236,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                         isLoading(true);
                                         logger.d('Product Creating');
                                         try {
-                                          await product.addProduct(
+                                          await product.createProduct(
                                               _titleController.text,
                                               _descriptionController.text,
                                               int.parse(_priceController.text),

@@ -40,6 +40,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+        ),
         scaffoldBackgroundColor: Colors.white
       ),
       home: const SignInScreen(),

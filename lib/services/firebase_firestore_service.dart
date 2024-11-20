@@ -49,7 +49,7 @@ class FirebaseFireStoreService {
     }
   }
 
-  Future<String> addProduct(ProductModel product) async {
+  Future<String> createProduct(ProductModel product) async {
     DocumentReference docRef =
         await _firestore.collection('products').add(product.toMap());
     String productId = docRef.id;
@@ -58,7 +58,7 @@ class FirebaseFireStoreService {
     return productId;
   }
 
-  Future<String> addOrder(OrderModel order) async {
+  Future<String> createOrder(OrderModel order) async {
     DocumentReference docRef =
         await _firestore.collection('orders').add(order.toMap());
     String orderId = docRef.id;

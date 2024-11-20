@@ -1,6 +1,7 @@
 import 'package:e_commerce/models/product_model.dart';
 import 'package:e_commerce/providers/cart_provider.dart';
 import 'package:e_commerce/screens/model_view_screen/model_view_screen.dart';
+import 'package:e_commerce/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -17,8 +18,15 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Product Details"),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(58),
+          child: Container(
+            decoration: Utils.appBarGradient,
+            child: AppBar(
+              
+              title: const Text("Product Details"),
+            ),
+          ),
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(

@@ -1,5 +1,4 @@
 import 'package:e_commerce/globals.dart';
-import 'package:e_commerce/screens/sign_in_screen/widgets/sign_In_widget.dart';
 import 'package:e_commerce/screens/sign_in_screen/widgets/sign_in_btn.dart';
 import 'package:e_commerce/screens/sign_in_screen/widgets/sign_in_get_started_button.dart';
 import 'package:e_commerce/screens/sign_in_screen/widgets/sign_in_title.dart';

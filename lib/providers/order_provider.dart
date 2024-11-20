@@ -26,8 +26,8 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  // Add Order
-  Future<void> addOrder(List<ProductModel> cartProducts, double totalAmount,
+  // Create Order
+  Future<void> createOrder(List<ProductModel> cartProducts, double totalAmount,
       String address) async {
     String date = (DateTime.now().toString()).replaceRange(10, null, '');
     OrderModel order = OrderModel(
@@ -40,7 +40,7 @@ class OrderProvider with ChangeNotifier {
       status: status[0],
     );
 
-    String orderId = await _fireStoreService.addOrder(order);
+    String orderId = await _fireStoreService.createOrder(order);
     order = order.copyWith(id: orderId);
 
     _orders.add(order);
