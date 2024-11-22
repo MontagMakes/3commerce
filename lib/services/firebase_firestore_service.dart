@@ -5,7 +5,7 @@ import 'package:e_commerce/models/product_model.dart';
 import 'package:e_commerce/models/user_model.dart';
 
 class FirebaseFireStoreService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestoreInstance = FirebaseFirestore.instance;
 
   Future<void> createUser(UserModel? user) async {
     try {
@@ -20,13 +20,13 @@ class FirebaseFireStoreService {
 
   Future<UserModel> fetchUserData(String userId) async {
     DocumentSnapshot doc =
-        await _firestore.collection('users').doc(userId).get();
+        await _firestoreInstance.collection('users').doc(userId).get();
     return UserModel.fromMap(doc.data() as Map<String, dynamic>);
   }
 
   Future<List<ProductModel>> fetchProductData() async {
     try {
-      QuerySnapshot snapshot = await _firestore.collection('products').get();
+      QuerySnapshot snapshot = await _firestoreInstance.collection('products').get();
       return snapshot.docs
           .map(
               (doc) => ProductModel.fromMap(doc.data() as Map<String, dynamic>))
@@ -39,7 +39,7 @@ class FirebaseFireStoreService {
 
   Future<List<OrderModel>> fetchOrderData() async {
     try {
-      QuerySnapshot snapshot = await _firestore.collection('orders').get();
+      QuerySnapshot snapshot = await _firestoreInstance.collection('orders').get();
       return snapshot.docs
           .map((doc) => OrderModel.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
@@ -51,7 +51,7 @@ class FirebaseFireStoreService {
 
   Future<String> createProduct(ProductModel product) async {
     DocumentReference docRef =
-        await _firestore.collection('products').add(product.toMap());
+        await _firestoreInstance.collection('products').add(product.toMap());
     String productId = docRef.id;
 
     await docRef.update({'id': productId});
@@ -60,7 +60,7 @@ class FirebaseFireStoreService {
 
   Future<String> createOrder(OrderModel order) async {
     DocumentReference docRef =
-        await _firestore.collection('orders').add(order.toMap());
+        await _firestoreInstance.collection('orders').add(order.toMap());
     String orderId = docRef.id;
 
     await docRef.update({'id': orderId});
@@ -68,15 +68,15 @@ class FirebaseFireStoreService {
   }
 
   Future<void> deleteProduct(String productId) async {
-    await _firestore.collection('products').doc(productId).delete();
+    await _firestoreInstance.collection('products').doc(productId).delete();
   }
 
   Future<void> deleteOrder(String orderId) async {
-    await _firestore.collection('orders').doc(orderId).delete();
+    await _firestoreInstance.collection('orders').doc(orderId).delete();
   }
 
   Future<void> updateOrderStatus(String orderId, String status) async {
-    await _firestore
+    await _firestoreInstance
         .collection('orders')
         .doc(orderId)
         .update({'status': status});

@@ -1,8 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-
 import 'package:e_commerce/models/product_model.dart';
 
 class OrderModel {
@@ -10,7 +6,7 @@ class OrderModel {
   String? userId;
   String? address;
   List<ProductModel> products;
-  double? totalAmount;
+  int? totalAmount;
   String? orderDate;
   String? status;
   OrderModel({
@@ -28,7 +24,7 @@ class OrderModel {
     String? userId,
     String? address,
     List<ProductModel>? products,
-    double? totalAmount,
+    int? totalAmount,
     String? orderDate,
     String? status,
   }) {
@@ -61,43 +57,14 @@ class OrderModel {
       userId: map['userId'] != null ? map['userId'] as String : null,
       address: map['address'] != null ? map['address'] as String : null,
       products: List<ProductModel>.from((map['products'] as List<dynamic>).map<ProductModel>((x) => ProductModel.fromMap(x as Map<String,dynamic>),),),
-      totalAmount: map['totalAmount'] != null ? map['totalAmount'] as double : null,
+      totalAmount: map['totalAmount'] != null ? map['totalAmount'] as int : null,
       orderDate: map['orderDate'] != null ? map['orderDate'] as String : null,
       status: map['status'] != null ? map['status'] as String : null,
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory OrderModel.fromJson(String source) => OrderModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
   @override
   String toString() {
     return 'OrderModel(id: $id, userId: $userId, address: $address, products: $products, totalAmount: $totalAmount, orderDate: $orderDate, status: $status)';
   }
-
-  @override
-  bool operator ==(covariant OrderModel other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.userId == userId &&
-      other.address == address &&
-      listEquals(other.products, products) &&
-      other.totalAmount == totalAmount &&
-      other.orderDate == orderDate &&
-      other.status == status;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-      userId.hashCode ^
-      address.hashCode ^
-      products.hashCode ^
-      totalAmount.hashCode ^
-      orderDate.hashCode ^
-      status.hashCode;
-  }
-  }
+}

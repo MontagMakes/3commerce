@@ -27,7 +27,7 @@ class OrderProvider with ChangeNotifier {
   }
 
   // Create Order
-  Future<void> createOrder(List<ProductModel> cartProducts, double totalAmount,
+  Future<void> createOrder(List<ProductModel> cartProducts, int totalAmount,
       String address) async {
     String date = (DateTime.now().toString()).replaceRange(10, null, '');
     OrderModel order = OrderModel(

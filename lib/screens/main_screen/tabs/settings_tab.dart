@@ -83,7 +83,7 @@ class SettingsTab extends StatelessWidget {
           children: [
             const SizedBox(height: 10),
             Text(
-              userProvider.getUserName() ?? 'User',
+              userProvider.currentUserData?.name ?? 'User',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 24,
@@ -91,7 +91,7 @@ class SettingsTab extends StatelessWidget {
               ),
             ),
             Text(
-              userProvider.getUserEmail() ?? 'Email Address',
+              userProvider.currentUserData?.email ?? 'Email Address',
               style: const TextStyle(color: Colors.black),
             ),
           ],

@@ -4,13 +4,13 @@ import 'package:e_commerce/main.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseStorageService {
-  final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+  final FirebaseStorage _storageInstance = FirebaseStorage.instance;
 
   // upload image file
   Future<String> uploadImageFile(File imageFile) async {
     try {
       // get reference to the image file
-      Reference ref = _firebaseStorage.ref().child('images/${DateTime.now()}');
+      Reference ref = _storageInstance.ref().child('images/${DateTime.now()}');
 
       // put the file in the reference
       UploadTask uploadTask = ref.putFile(imageFile);
@@ -29,7 +29,7 @@ class FirebaseStorageService {
   Future<String> uploadModelFile(File modelFile) async {
     try {
       // get the reference to the model file
-      Reference ref = _firebaseStorage.ref().child('models/${DateTime.now()}');
+      Reference ref = _storageInstance.ref().child('models/${DateTime.now()}');
 
       // put the file in the reference
       UploadTask uploadTask = ref.putFile(modelFile);
@@ -47,7 +47,7 @@ class FirebaseStorageService {
   // replace file in storage using url
   Future<String> replaceFile(File newFile, String url) async {
     try {
-      Reference ref = _firebaseStorage.ref().child(url);
+      Reference ref = _storageInstance.ref().child(url);
 
       await ref.delete();
 
@@ -62,15 +62,9 @@ class FirebaseStorageService {
     return '';
   }
 
-  String getFileName(String url) {
-    Reference ref = _firebaseStorage.refFromURL(url);
-    String name = ref.name;
-    return name;
-  }
-
   // delete file from storage using url
   Future<void> deleteFile(String url) async {
-    Reference ref = _firebaseStorage.refFromURL(url);
+    Reference ref = _storageInstance.refFromURL(url);
     await ref.delete();
   }
 }

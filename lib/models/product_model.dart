@@ -78,30 +78,4 @@ class ProductModel {
   String toString() {
     return 'ProductModel(id: $id, title: $title, description: $description, price: $price, category: $category, ownerID: $ownerID, imageUrl: $imageUrl, modelUrl: $modelUrl)';
   }
-
-  @override
-  bool operator ==(covariant ProductModel other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.title == title &&
-        other.description == description &&
-        other.price == price &&
-        other.category == category &&
-        other.ownerID == ownerID &&
-        other.imageUrl == imageUrl &&
-        other.modelUrl == modelUrl;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        price.hashCode ^
-        category.hashCode ^
-        ownerID.hashCode ^
-        imageUrl.hashCode ^
-        modelUrl.hashCode;
-  }
 }

@@ -84,7 +84,7 @@ class CartTab extends StatelessWidget {
     ));
   }
 
-  Container _totalAmount(double totalAmount) {
+  Container _totalAmount(int totalAmount) {
     return Container(
       color: Colors.white,
       child: Padding(

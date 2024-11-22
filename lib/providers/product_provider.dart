@@ -7,8 +7,9 @@ import 'package:e_commerce/services/firebase_storage_service.dart';
 import 'package:flutter/material.dart';
 
 class ProductProvider with ChangeNotifier {
-  final FirebaseStorageService _storageService = FirebaseStorageService();
   final FirebaseFireStoreService _fireStoreService = FirebaseFireStoreService();
+  final FirebaseStorageService _storageService = FirebaseStorageService();
+  
 
   UserProvider? _userProvider;
 

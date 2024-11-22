@@ -39,22 +39,7 @@ class UserModel {
       email: map['email'] != null ? map['email'] as String : null,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
+  
   @override
   String toString() => 'UserModel(id: $id, name: $name, email: $email)';
-
-  @override
-  bool operator ==(covariant UserModel other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id && other.name == name && other.email == email;
-  }
-
-  @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ email.hashCode;
 }

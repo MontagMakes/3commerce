@@ -10,14 +10,12 @@ class UserProvider with ChangeNotifier {
 
   UserModel? _currentUserData;
 
-  Stream<User?> get authStateChanges => _authService.authStateChanges();
-
   UserModel? get currentUserData => _currentUserData;
 
   // SignIn using email and password
   Future<void> signIn(String email, String password) async {
     UserCredential userCred = await _authService.signIn(email, password);
-    await getUserData(userCred);
+    await fetchUserData(userCred);
   }
 
   // SignOut
@@ -37,7 +35,7 @@ class UserProvider with ChangeNotifier {
     );
 
     await _fireStoreService.createUser(userModelData);
-    getUserData(userCred);
+    fetchUserData(userCred);
   }
 
   Future<void> resetPassword(String email) async {
@@ -48,20 +46,12 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<void> getUserData(UserCredential userCred) async {
+  Future<void> fetchUserData(UserCredential userCred) async {
     _currentUserData =
         await _fireStoreService.fetchUserData(userCred.user!.uid);
   }
 
-  String? getUserName() {
-    return _currentUserData?.name;
-  }
-
-  String? getUserId(){
+  String? getUserId() {
     return _currentUserData?.id;
-  }
-
-  String? getUserEmail() {
-    return _currentUserData?.email;
   }
 }
