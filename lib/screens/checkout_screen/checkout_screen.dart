@@ -1,8 +1,8 @@
 import 'package:e_commerce/main.dart';
 import 'package:e_commerce/providers/cart_provider.dart';
 import 'package:e_commerce/providers/order_provider.dart';
-import 'package:e_commerce/screens/checkout_screen/widgets/checkout_Form_address.dart';
-import 'package:e_commerce/screens/checkout_screen/widgets/checkout_form_payment.dart';
+import 'package:e_commerce/screens/checkout_screen/widgets/address_form_checkout.dart';
+import 'package:e_commerce/screens/checkout_screen/widgets/payment_form_checkout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,14 +54,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             child: ListView(
               children: [
                 // Shipping Address Form
-                CheckoutFormAddress(
+                AddressFormCheckout(
                     countryController: countryController,
                     cityController: cityController,
                     streetController: streetController),
                 const SizedBox(height: 20),
 
                 // Payment Method Form
-                const CheckoutFormPayment(),
+                const PaymentFormCheckout(),
                 const SizedBox(height: 20),
 
                 // Total Amount

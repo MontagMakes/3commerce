@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CheckoutFormPayment extends StatelessWidget {
-  const CheckoutFormPayment({
+class PaymentFormCheckout extends StatelessWidget {
+  const PaymentFormCheckout({
     super.key,
   });
 

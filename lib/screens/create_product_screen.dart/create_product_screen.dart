@@ -2,11 +2,14 @@ import 'dart:io';
 import 'package:e_commerce/globals.dart';
 import 'package:e_commerce/main.dart';
 import 'package:e_commerce/providers/product_provider.dart';
+import 'package:e_commerce/screens/create_product_screen.dart/widgets/category_form_create_product.dart';
+import 'package:e_commerce/screens/create_product_screen.dart/widgets/description_form_create_product.dart';
+import 'package:e_commerce/screens/create_product_screen.dart/widgets/price_form_create_product.dart';
+import 'package:e_commerce/screens/create_product_screen.dart/widgets/title_form_create_product.dart';
 import 'package:e_commerce/screens/main_screen/main_screen.dart';
+import 'package:e_commerce/utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class CreateProductScreen extends StatefulWidget {
@@ -28,21 +31,13 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   File? _imageFile;
   File? _modelFile;
 
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
-    _priceController.dispose();
-    super.dispose();
-  }
-
   void isLoading(bool isLoading) {
     setState(() {
       _isLoading = isLoading;
     });
   }
 
-  void selectedOption(String value) {
+  void selectNewOption(String value) {
     setState(() {
       _selectedOption = value;
     });
@@ -63,6 +58,14 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       logger.e('FilesPicker did not work');
     }
     isLoading(false);
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _priceController.dispose();
+    super.dispose();
   }
 
   Future<void> _pickModel() async {
@@ -113,75 +116,24 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       child: Column(
                         children: <Widget>[
                           // Title field
-                          TextFormField(
-                            controller: _titleController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter the title';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              labelText: 'Enter title',
-                              hintStyle: TextStyle(color: Colors.grey),
-                            ),
-                          ),
+                          TitleFormCreateProduct(
+                              titleController: _titleController),
                           const SizedBox(height: 20),
 
                           // Description Field
-                          TextFormField(
-                            controller: _descriptionController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter the description';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              labelText: 'Enter Description',
-                              hintStyle: TextStyle(color: Colors.grey),
-                            ),
-                          ),
+                          DescriptionFormCreateProduct(
+                              descriptionController: _descriptionController),
                           const SizedBox(height: 20),
 
                           // Price Field
-                          TextFormField(
-                            controller: _priceController,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter a price';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              labelText: 'Enter the Price',
-                            ),
-                          ),
+                          PriceFormCreateProduct(
+                              priceController: _priceController),
                           const SizedBox(height: 20),
 
-                          DropdownButtonFormField(
-                            items: Globals.categories.map((String option) {
-                              return DropdownMenuItem<String>(
-                                value: option,
-                                child: Text(option),
-                              );
-                            }).toList(),
-                            onChanged: (String? value) =>
-                                selectedOption(value!),
-                            value: _selectedOption,
-                            decoration: const InputDecoration(
-                                labelText: 'Select Category'),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please select a category';
-                              }
-                              return null;
-                            },
-                          ),
+                          CategoryFormCreateProduct(
+                              selectedOption: _selectedOption,
+                              selectNewOption: selectNewOption),
+
                           const SizedBox(
                             height: 20,
                           ),
@@ -221,16 +173,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                     if (_formKey.currentState!.validate()) {
                                       if (_imageFile == null ||
                                           _modelFile == null) {
-                                        Fluttertoast.showToast(
-                                          msg:
-                                              'Please Select Both Image file and model File to continue.',
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.CENTER,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.white,
-                                          textColor: Colors.black,
-                                          fontSize: 16.0,
-                                        );
+                                        Utils.showToast(
+                                            'Please Select Both Image file and model File to continue.');
                                         return;
                                       } else {
                                         isLoading(true);
@@ -243,7 +187,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                               _selectedOption.toString(),
                                               _imageFile!,
                                               _modelFile!);
-
+                                          Utils.showToast(
+                                              'Product Created Successfully');
                                           Navigator.pushReplacement(
                                               Globals
                                                   .scaffoldKey.currentContext!,
@@ -252,9 +197,10 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                                     const MainScreen(),
                                               ));
                                           logger.d('Product Created');
-                                          isLoading(false);
                                         } catch (e) {
                                           logger.e(e);
+                                        } finally {
+                                          isLoading(false);
                                         }
                                       }
                                     }

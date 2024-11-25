@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CheckoutFormAddress extends StatelessWidget {
-  const CheckoutFormAddress({
+class AddressFormCheckout extends StatelessWidget {
+  const AddressFormCheckout({
     super.key,
     required this.countryController,
     required this.cityController,
