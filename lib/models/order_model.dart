@@ -6,7 +6,7 @@ class OrderModel {
   String? userId;
   String? address;
   List<ProductModel> products;
-  int? totalAmount;
+  int? totalPrice;
   String? orderDate;
   String? status;
   OrderModel({
@@ -14,7 +14,7 @@ class OrderModel {
     this.userId,
     this.address,
     required this.products,
-    this.totalAmount,
+    this.totalPrice,
     this.orderDate,
     this.status,
   });
@@ -24,7 +24,7 @@ class OrderModel {
     String? userId,
     String? address,
     List<ProductModel>? products,
-    int? totalAmount,
+    int? totalPrice,
     String? orderDate,
     String? status,
   }) {
@@ -33,7 +33,7 @@ class OrderModel {
       userId: userId ?? this.userId,
       address: address ?? this.address,
       products: products ?? this.products,
-      totalAmount: totalAmount ?? this.totalAmount,
+      totalPrice: totalPrice ?? this.totalPrice,
       orderDate: orderDate ?? this.orderDate,
       status: status ?? this.status,
     );
@@ -45,7 +45,7 @@ class OrderModel {
       'userId': userId,
       'address': address,
       'products': products.map((x) => x.toMap()).toList(),
-      'totalAmount': totalAmount,
+      'totalPrice': totalPrice,
       'orderDate': orderDate,
       'status': status,
     };
@@ -57,7 +57,7 @@ class OrderModel {
       userId: map['userId'] != null ? map['userId'] as String : null,
       address: map['address'] != null ? map['address'] as String : null,
       products: List<ProductModel>.from((map['products'] as List<dynamic>).map<ProductModel>((x) => ProductModel.fromMap(x as Map<String,dynamic>),),),
-      totalAmount: map['totalAmount'] != null ? map['totalAmount'] as int : null,
+      totalPrice: map['totalPrice'] != null ? map['totalPrice'] as int : null,
       orderDate: map['orderDate'] != null ? map['orderDate'] as String : null,
       status: map['status'] != null ? map['status'] as String : null,
     );
@@ -65,6 +65,6 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(id: $id, userId: $userId, address: $address, products: $products, totalAmount: $totalAmount, orderDate: $orderDate, status: $status)';
+    return 'OrderModel(id: $id, userId: $userId, address: $address, products: $products, totalPrice: $totalPrice, orderDate: $orderDate, status: $status)';
   }
 }

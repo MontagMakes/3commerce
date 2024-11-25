@@ -61,8 +61,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     subtitle: Text(widget.orderDetails.orderDate.toString()),
                   ),
                   ListTile(
-                    title: const Text("Total Amount"),
-                    subtitle: Text(widget.orderDetails.totalAmount.toString()),
+                    title: const Text("Total Price"),
+                    subtitle: Text(widget.orderDetails.totalPrice.toString()),
                   ),
                   ListTile(
                     title: const Text("Order Status"),

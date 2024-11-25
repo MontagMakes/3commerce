@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 class ProductProvider with ChangeNotifier {
   final FirebaseFireStoreService _fireStoreService = FirebaseFireStoreService();
   final FirebaseStorageService _storageService = FirebaseStorageService();
-  
 
   UserProvider? _userProvider;
 
@@ -19,29 +18,16 @@ class ProductProvider with ChangeNotifier {
   List<ProductModel> get totalProducts => [..._totalProducts];
   List<ProductModel> get myProducts => [..._myProducts];
 
-  // Get UserProvider
+  // Get UserProvider (in order to use userId
   void updateUserProvider(UserProvider userProvider) {
     _userProvider = userProvider;
     notifyListeners();
   }
-  
-  Future<void> fetchProductData() async {
-    try {
-      _totalProducts = await _fireStoreService.fetchProductData();
-      _myProducts = _totalProducts
-          .where((element) =>
-              element.ownerID == _userProvider!.getUserId().toString())
-          .toList();
-      notifyListeners();
-    } catch (e) {
-      logger.e('Error fetching Products: $e');
-      rethrow;
-    }
-  }
 
   // Add product to FirebaseFirestore and FirebaseStorage
-  Future<void> createProduct(String title, String description, int price, String category,
-      File imageFile, File modelFile) async {
+  Future<void> createProduct(String title, String description, int price,
+      String category, File imageFile, File modelFile) async {
+
     // Upload image and model files to FirebaseStorage
     var imageUrl = await _storageService.uploadImageFile(imageFile);
     var modelUrl = await _storageService.uploadModelFile(modelFile);
@@ -64,6 +50,21 @@ class ProductProvider with ChangeNotifier {
     _totalProducts.add(product);
     _myProducts.add(product);
     notifyListeners();
+  }
+
+  // Fetch product data from FirebaseFirestore
+  Future<void> fetchProductData() async {
+    try {
+      _totalProducts = await _fireStoreService.fetchProductData();
+      _myProducts = _totalProducts
+          .where((element) =>
+              element.ownerID == _userProvider!.getUserId().toString())
+          .toList();
+      notifyListeners();
+    } catch (e) {
+      logger.e('Error fetching Products: $e');
+      rethrow;
+    }
   }
 
   // Delete product from FirebaseFirestore and FirebaseStorage

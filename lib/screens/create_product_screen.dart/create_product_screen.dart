@@ -71,7 +71,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       type: FileType.any,
     );
 
-    if (result != null) {
+    if (result != null && result.files.single.extension.toString() == 'glb') {
       setState(() {
         _modelFile = File(result.files.single.path!);
         isModelLoaded = true;

@@ -74,11 +74,4 @@ class FirebaseFireStoreService {
   Future<void> deleteOrder(String orderId) async {
     await _firestoreInstance.collection('orders').doc(orderId).delete();
   }
-
-  Future<void> updateOrderStatus(String orderId, String status) async {
-    await _firestoreInstance
-        .collection('orders')
-        .doc(orderId)
-        .update({'status': status});
-  }
 }

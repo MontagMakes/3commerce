@@ -39,7 +39,7 @@ class OrderHistoryScreen extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                            'Total Cost: ${element.totalAmount}'),
+                                            'Total Cost: ${element.totalPrice}'),
                                         Text(
                                             'Order Date: ${element.orderDate}'),
                                         Text('Order Status: ${element.status}'),

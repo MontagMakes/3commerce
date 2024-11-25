@@ -15,26 +15,15 @@ class OrderProvider with ChangeNotifier {
 
   List<OrderModel> get orders => _orders;
 
-  // Fetch Orders
-  Future<void> fetchOrders() async {
-    try {
-      _orders = await _fireStoreService.fetchOrderData();
-      notifyListeners();
-    } catch (error) {
-      logger.e(error);
-      rethrow;
-    }
-  }
-
   // Create Order
-  Future<void> createOrder(List<ProductModel> cartProducts, int totalAmount,
-      String address) async {
+  Future<void> createOrder(
+      List<ProductModel> cartProducts, int totalPrice, String address) async {
     String date = (DateTime.now().toString()).replaceRange(10, null, '');
     OrderModel order = OrderModel(
       id: '',
       products: cartProducts,
       address: address,
-      totalAmount: totalAmount,
+      totalPrice: totalPrice,
       orderDate: date,
       userId: _authService.getUserId(),
       status: status[0],
@@ -47,6 +36,17 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Fetch Orders
+  Future<void> fetchOrders() async {
+    try {
+      _orders = await _fireStoreService.fetchOrderData();
+      notifyListeners();
+    } catch (error) {
+      logger.e(error);
+      rethrow;
+    }
+  }
+
   // Delete Order
   Future<void> deleteOrder(String orderId) async {
     try {
@@ -56,19 +56,6 @@ class OrderProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       logger.e('Error deleting Order: $e');
-      rethrow;
-    }
-  }
-
-  // Update Order Status
-  Future<void> updateOrderStatus(String orderId, String status) async {
-    try {
-      await _fireStoreService.updateOrderStatus(orderId, status);
-      _orders.firstWhere((element) => element.id == orderId).status = status;
-
-      notifyListeners();
-    } catch (e) {
-      logger.e('Error updating Order Status: $e');
       rethrow;
     }
   }

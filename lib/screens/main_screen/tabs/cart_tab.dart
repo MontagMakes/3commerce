@@ -37,7 +37,7 @@ class CartTab extends StatelessWidget {
   Expanded _cartList(CartProvider cartProvider) {
     return Expanded(
         child: ListView(
-      children: List.generate(cartProvider.items.length, (index) {
+      children: List.generate(cartProvider.cart.products.length, (index) {
         return Container(
           color: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -49,7 +49,7 @@ class CartTab extends StatelessWidget {
                     const BoxConstraints(maxHeight: 100, maxWidth: 100),
                 child: Image(
                     image: NetworkImage(
-                      cartProvider.items[index].imageUrl,
+                      cartProvider.cart.products[index].imageUrl,
                     ),
                     fit: BoxFit.cover),
               ),
@@ -58,18 +58,18 @@ class CartTab extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(cartProvider.items[index].title,
+                    Text(cartProvider.cart.products[index].title,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 4),
-                    Text('\$${cartProvider.itemsList[index].price}',
+                    Text('\$${cartProvider.cart.products[index].price}',
                         style: const TextStyle(color: Colors.grey)),
                     const SizedBox(height: 8),
                     Align(
                       alignment: Alignment.centerRight,
                       child: IconButton(
                         onPressed: () {
-                          cartProvider.removeItem(cartProvider.items[index]);
+                          cartProvider.removeItem(cartProvider.cart.products[index]);
                         },
                         icon: const Icon(Icons.remove_circle_outline),
                       ),
@@ -120,7 +120,7 @@ class CartTab extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          if (cartprovider.getCartLength() == 0) {
+          if (cartprovider.cart.products.length== 0) {
             Fluttertoast.showToast(
               msg: "Your cart is empty. Please add items to proceed.",
               toastLength: Toast.LENGTH_SHORT,

@@ -8,7 +8,15 @@ class CheckoutFormPayment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Payment Method
+        const Text("Payment method",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+
+        // Credit Card
+        const Text("Credit Card"),
         TextFormField(
           decoration: const InputDecoration(
             labelText: 'Name on Card',

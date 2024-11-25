@@ -1,38 +1,32 @@
+import 'package:e_commerce/models/cart_model.dart';
 import 'package:e_commerce/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class CartProvider with ChangeNotifier {
-  List<ProductModel> _items = [];
+  final CartModel _cart = CartModel(products: [], totalAmount: 0);
 
-  List<ProductModel> get items => [..._items];
+  CartModel get cart => _cart;
 
   int get totalAmount {
     var total = 0;
-    for (var item in _items) {
+    for (var item in cart.products) {
       total += item.price;
     }
     return total;
   }
 
-  List<ProductModel> get itemsList {
-    return _items;
-  }
-
   void addItem(ProductModel product) {
-    _items.add(product);
+    _cart.products.add(product);
     notifyListeners();
   }
 
   void removeItem(ProductModel product) {
-    _items.remove(product);
+    _cart.products.remove(product);
     notifyListeners();
   }
 
   void clearCart() {
-    _items = [];
+    _cart.products = [];
     notifyListeners();
   }
-
-  int getCartLength(){
-    return _items.length;}
 }

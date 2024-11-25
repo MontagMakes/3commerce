@@ -15,7 +15,12 @@ class CheckoutFormAddress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const Text("Shipping address",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+
         // Country
         TextFormField(
           controller: countryController,
@@ -31,7 +36,7 @@ class CheckoutFormAddress extends StatelessWidget {
             hintStyle: TextStyle(color: Colors.grey),
           ),
         ),
-    
+
         // City
         TextFormField(
           controller: cityController,
@@ -47,7 +52,7 @@ class CheckoutFormAddress extends StatelessWidget {
             hintStyle: TextStyle(color: Colors.grey),
           ),
         ),
-    
+
         // Street Address
         TextFormField(
           controller: streetController,
