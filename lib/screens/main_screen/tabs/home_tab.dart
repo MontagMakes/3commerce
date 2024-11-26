@@ -46,7 +46,7 @@ class _HomeTabState extends State<HomeTab> {
     await product.fetchProductData();
   }
 
-  List<ProductModel> displayProductsF(List<ProductModel> listOfProducts) {
+  List<ProductModel> displayProducts(List<ProductModel> listOfProducts) {
     if (_searchController.text.isEmpty) {
       if (filter == '') {
         return listOfProducts;
@@ -62,12 +62,12 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) {
-    final ProductProvider productProvider = Provider.of<ProductProvider>(context);
+    List<ProductModel> listOfProducts = Provider.of<ProductProvider>(context).totalProducts;
 
-    List<ProductModel> listOfProducts = productProvider.totalProducts;
-
-    List<ProductModel> displayProducts = displayProductsF(listOfProducts);
+    List<ProductModel> products = displayProducts(listOfProducts);
     _searchController.text.isEmpty ? listOfProducts : _searchResults;
+
+    List<String> categories = Globals.categories;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -97,29 +97,27 @@ class _HomeTabState extends State<HomeTab> {
                       title: const Text('Filter'),
                       content: SingleChildScrollView(
                         child: Column(
-                          children: [
-                            for (var category in Globals.categories)
-                              ListTile(
-                                title: Text(category),
-                                onTap: () {
-                                  if (filter != category) {
-                                    setState(() {
-                                      filter = category;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      filter = '';
-                                    });
-                                  }
+                            children: List.generate(categories.length, (index) {
+                          return ListTile(
+                            title: Text(categories[index]),
+                            onTap: () {
+                              if (filter != categories[index]) {
+                                setState(() {
+                                  filter = categories[index];
+                                });
+                              } else {
+                                setState(() {
+                                  filter = '';
+                                });
+                              }
 
-                                  Navigator.pop(context);
-                                },
-                                trailing: filter == category
-                                    ? const Icon(Icons.check)
-                                    : null,
-                              ),
-                          ],
-                        ),
+                              Navigator.pop(context);
+                            },
+                            trailing: filter == categories[index]
+                                ? const Icon(Icons.check)
+                                : null,
+                          );
+                        })),
                       ));
                 },
               );
@@ -139,9 +137,10 @@ class _HomeTabState extends State<HomeTab> {
               crossAxisCount: 2,
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
-              children: [
-                for (var product in displayProducts)
-                  InkWell(
+              children: List.generate(
+                products.length,
+                (index) {
+                  return InkWell(
                     child: Material(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
@@ -153,7 +152,7 @@ class _HomeTabState extends State<HomeTab> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ProductDetailsScreen(
-                                  productDetails: product,
+                                  productDetails: products[index],
                                 ),
                               ));
                         },
@@ -161,12 +160,13 @@ class _HomeTabState extends State<HomeTab> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Image(
-                              image: NetworkImage(product.imageUrl),
+                              image:
+                                  NetworkImage(products[index].imageUrl),
                               height: 120,
                               width: 130,
                             ),
                             Text(
-                              product.title,
+                              products[index].title,
                               style: const TextStyle(fontSize: 20),
                             ),
                             Padding(
@@ -177,7 +177,7 @@ class _HomeTabState extends State<HomeTab> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "\$${product.price.toString()}",
+                                    "\$${products[index].price.toString()}",
                                     style: const TextStyle(
                                         color: Colors.grey, fontSize: 20),
                                   ),
@@ -189,8 +189,9 @@ class _HomeTabState extends State<HomeTab> {
                         ),
                       ),
                     ),
-                  ),
-              ]),
+                  );
+                },
+              )),
         ),
       ),
     );

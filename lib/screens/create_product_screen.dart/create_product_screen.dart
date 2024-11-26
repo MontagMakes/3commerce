@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:e_commerce/globals.dart';
+
 import 'package:e_commerce/main.dart';
 import 'package:e_commerce/providers/product_provider.dart';
 import 'package:e_commerce/screens/create_product_screen.dart/widgets/category_form_create_product.dart';
@@ -88,7 +88,6 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: Globals.scaffoldKey,
       appBar: AppBar(
         leading: const BackButton(),
         title: const Text('Create Product'),
@@ -189,16 +188,19 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                               _modelFile!);
                                           Utils.showToast(
                                               'Product Created Successfully');
-                                          Navigator.pushReplacement(
-                                              Globals
-                                                  .scaffoldKey.currentContext!,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const MainScreen(),
-                                              ));
+                                          if (context.mounted) {
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const MainScreen(),
+                                                ));
+                                          }
+
                                           logger.d('Product Created');
                                         } catch (e) {
                                           logger.e(e);
+                                          Utils.showToast('Product Creation failed: $e');
                                         } finally {
                                           isLoading(false);
                                         }
