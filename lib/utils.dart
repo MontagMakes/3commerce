@@ -2,22 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Utils {
-  static var appBarGradient = const BoxDecoration(
-    gradient: LinearGradient(
-      colors: [Color(0xFFFF7080), Color(0xFFFF4081)],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ),
+  static LinearGradient appBarGradient = const LinearGradient(
+    colors: [Color(0xFFFF7080), Color(0xFFFF4081)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
   );
 
-  static Future<bool?> showToast(String message) {
+  static Future<void> showToast(String message) {
     return Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
+      gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      backgroundColor: Colors.white,
-      textColor: Colors.black,
+      backgroundColor: Colors.grey,
+      textColor: Colors.white,
       fontSize: 16.0,
     );
   }

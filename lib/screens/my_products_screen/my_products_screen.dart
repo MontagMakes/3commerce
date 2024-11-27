@@ -1,6 +1,6 @@
 import 'package:e_commerce/providers/product_provider.dart';
 import 'package:e_commerce/screens/create_product_screen.dart/create_product_screen.dart';
-import 'package:e_commerce/screens/product_details_screen/product_details_screen.dart';
+import 'package:e_commerce/screens/my_products_screen/widgets/products_my_products.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +14,7 @@ class MyProductsScreen extends StatefulWidget {
 class _MyProductsScreenState extends State<MyProductsScreen> {
   bool _isLoading = false;
 
-  void isLoading(bool value) {
+  void updateLoadingState(bool value) {
     setState(() {
       _isLoading = value;
     });
@@ -48,69 +48,11 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                           heightFactor: 30,
                           child: Text("List is empty"),
                         )
-                      : _productsList(productProvider)
+                      : ProductsMyProducts(
+                          updateLoadingState: updateLoadingState)
                 ],
               ),
             ),
     );
-  }
-
-  Expanded _productsList(ProductProvider productProvider) {
-    return Expanded(
-        child: ListView(
-      children: List.generate(productProvider.myProducts.length, (index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProductDetailsScreen(
-                        productDetails: productProvider.myProducts[index])));
-          },
-          child: Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                    constraints:
-                        const BoxConstraints(maxHeight: 100, maxWidth: 100),
-                    child: Image(
-                        image: NetworkImage(
-                            productProvider.myProducts[index].imageUrl))),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(productProvider.myProducts[index].title,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Text('\$${productProvider.myProducts[index].price}',
-                          style: const TextStyle(color: Colors.grey)),
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: IconButton(
-                          onPressed: () async {
-                            isLoading(true);
-                            await productProvider.deleteProduct(
-                                productProvider.myProducts[index].id);
-                            isLoading(false);
-                          },
-                          icon: const Icon(Icons.remove_circle_outline),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }),
-    ));
   }
 }

@@ -68,8 +68,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     const SizedBox(height: 20),
 
                     // Password Field
-                    SignUpFormPassword(
-                        passwordController: _passwordController),
+                    SignUpFormPassword(passwordController: _passwordController),
                     const SizedBox(height: 20),
 
                     // Confirm Password Field

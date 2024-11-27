@@ -2,6 +2,7 @@ import 'package:e_commerce/globals.dart';
 import 'package:e_commerce/screens/sign_in_screen/widgets/sign_in_btn.dart';
 import 'package:e_commerce/screens/sign_in_screen/widgets/sign_in_get_started_button.dart';
 import 'package:e_commerce/screens/sign_in_screen/widgets/sign_in_title.dart';
+import 'package:e_commerce/utils.dart';
 import 'package:flutter/material.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -45,13 +46,7 @@ class _SignInScreenState extends State<SignInScreen>
 
       // Page background color
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFFF4081), Color(0xFFFF7043)],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: Utils.appBarGradient),
 
         // Using stack layout, to position the widgets
         child: Stack(

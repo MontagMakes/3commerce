@@ -6,17 +6,16 @@ import 'package:firebase_storage/firebase_storage.dart';
 class FirebaseStorageService {
   final FirebaseStorage _storageInstance = FirebaseStorage.instance;
 
-  // upload image file
+  // upload image file to storage and return the download url
   Future<String> uploadImageFile(File imageFile) async {
     try {
-      // get reference to the image file
+      // get reference to the storage location
       Reference ref = _storageInstance.ref().child('images/${DateTime.now()}');
 
-      // put the file in the reference
-      UploadTask uploadTask = ref.putFile(imageFile);
-
-      // get the download url
-      String downloadUrl = await uploadTask.then((e) => e.ref.getDownloadURL());
+      // upload the file to the location and get the download url
+      String downloadUrl = await ref
+          .putFile(imageFile)
+          .then((taskSnapshot) => taskSnapshot.ref.getDownloadURL());
 
       return downloadUrl;
     } catch (e) {
@@ -28,14 +27,13 @@ class FirebaseStorageService {
   // upload model file
   Future<String> uploadModelFile(File modelFile) async {
     try {
-      // get the reference to the model file
+      // get reference to the storage location
       Reference ref = _storageInstance.ref().child('models/${DateTime.now()}');
 
-      // put the file in the reference
-      UploadTask uploadTask = ref.putFile(modelFile);
-
-      // get the download url
-      String downloadUrl = await uploadTask.then((e) => e.ref.getDownloadURL());
+      // upload the file to the location and get the download url
+      String downloadUrl = await ref
+          .putFile(modelFile)
+          .then((taskSnapshot) => taskSnapshot.ref.getDownloadURL());
 
       return downloadUrl;
     } catch (e) {
@@ -45,15 +43,22 @@ class FirebaseStorageService {
   }
 
   // replace file in storage using url
+
+  // delete the old file and upload the new file to the same location
   Future<String> replaceFile(File newFile, String url) async {
     try {
+
+      if (url.isEmpty) return '';
+      // get reference to the storage location
       Reference ref = _storageInstance.ref().child(url);
 
+      // delete the old file
       await ref.delete();
 
-      UploadTask uploadTask = ref.putFile(newFile);
-
-      String downloadUrl = await uploadTask.then((e) => e.ref.getDownloadURL());
+      // upload the new file to the location and get the download url
+      String downloadUrl = await ref
+          .putFile(newFile)
+          .then((taskSnapshot) => taskSnapshot.ref.getDownloadURL());
 
       return downloadUrl;
     } catch (e) {
@@ -64,6 +69,7 @@ class FirebaseStorageService {
 
   // delete file from storage using url
   Future<void> deleteFile(String url) async {
+    if (url.isEmpty) return;
     Reference ref = _storageInstance.refFromURL(url);
     await ref.delete();
   }

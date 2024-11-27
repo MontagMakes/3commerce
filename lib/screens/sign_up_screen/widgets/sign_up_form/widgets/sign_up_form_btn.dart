@@ -1,11 +1,12 @@
 import 'package:e_commerce/globals.dart';
+import 'package:e_commerce/main.dart';
 import 'package:e_commerce/providers/order_provider.dart';
 import 'package:e_commerce/providers/product_provider.dart';
 import 'package:e_commerce/providers/user_provider.dart';
 import 'package:e_commerce/screens/main_screen/main_screen.dart';
+import 'package:e_commerce/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class SignUpFormBtn extends StatelessWidget {
@@ -45,8 +46,6 @@ class SignUpFormBtn extends StatelessWidget {
             ),
           ),
           onPressed: () async {
-            String message = "";
-
             if (_formKey.currentState!.validate()) {
               updateLoadingState(true);
               try {
@@ -63,16 +62,8 @@ class SignUpFormBtn extends StatelessWidget {
                     (route) => false);
                 updateLoadingState(false);
               } on FirebaseAuthException catch (e) {
-                message = e.code;
-                Fluttertoast.showToast(
-                  msg: message,
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.white,
-                  textColor: Colors.black,
-                  fontSize: 16.0,
-                );
+                logger.e(e);
+                Utils.showToast(e.code);
                 updateLoadingState(false);
               }
             }

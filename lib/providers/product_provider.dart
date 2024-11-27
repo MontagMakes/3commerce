@@ -26,11 +26,13 @@ class ProductProvider with ChangeNotifier {
 
   // Add product to FirebaseFirestore and FirebaseStorage
   Future<void> createProduct(String title, String description, int price,
-      String category, File imageFile, File modelFile) async {
-
+      String category, File imageFile, File? modelFile) async {
     // Upload image and model files to FirebaseStorage
-    var imageUrl = await _storageService.uploadImageFile(imageFile);
-    var modelUrl = await _storageService.uploadModelFile(modelFile);
+    String imageUrl = await _storageService.uploadImageFile(imageFile);
+    String modelUrl;
+    modelFile != null
+        ? modelUrl = await _storageService.uploadModelFile(modelFile)
+        : modelUrl = '';
 
     // Create ProductModel object
     ProductModel product = ProductModel(

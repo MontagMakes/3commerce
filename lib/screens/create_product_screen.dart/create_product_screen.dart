@@ -1,16 +1,6 @@
-import 'dart:io';
-
-import 'package:e_commerce/main.dart';
-import 'package:e_commerce/providers/product_provider.dart';
-import 'package:e_commerce/screens/create_product_screen.dart/widgets/category_form_create_product.dart';
-import 'package:e_commerce/screens/create_product_screen.dart/widgets/description_form_create_product.dart';
-import 'package:e_commerce/screens/create_product_screen.dart/widgets/price_form_create_product.dart';
-import 'package:e_commerce/screens/create_product_screen.dart/widgets/title_form_create_product.dart';
-import 'package:e_commerce/screens/main_screen/main_screen.dart';
-import 'package:e_commerce/utils.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:e_commerce/globals.dart';
+import 'package:e_commerce/screens/create_product_screen.dart/form_create_product/form_create_product.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CreateProductScreen extends StatefulWidget {
   const CreateProductScreen({super.key});
@@ -20,74 +10,19 @@ class CreateProductScreen extends StatefulWidget {
 }
 
 class _CreateProductScreenState extends State<CreateProductScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  String? _selectedOption;
   bool _isLoading = false;
-  bool isImageLoaded = false;
-  bool isModelLoaded = false;
-  File? _imageFile;
-  File? _modelFile;
 
-  void isLoading(bool isLoading) {
+
+  void updateLoadingState(bool isLoading) {
     setState(() {
       _isLoading = isLoading;
     });
   }
 
-  void selectNewOption(String value) {
-    setState(() {
-      _selectedOption = value;
-    });
-  }
-
-  Future<void> _pickImage() async {
-    isLoading(true);
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
-
-    if (result != null) {
-      setState(() {
-        _imageFile = File(result.files.single.path!);
-        isImageLoaded = true;
-      });
-    } else {
-      isImageLoaded = false;
-      logger.e('FilesPicker did not work');
-    }
-    isLoading(false);
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
-    _priceController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _pickModel() async {
-    isLoading(true);
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
-    );
-
-    if (result != null && result.files.single.extension.toString() == 'glb') {
-      setState(() {
-        _modelFile = File(result.files.single.path!);
-        isModelLoaded = true;
-      });
-    } else {
-      isImageLoaded = false;
-    }
-    isLoading(false);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Globals.scaffoldKey,
       appBar: AppBar(
         leading: const BackButton(),
         title: const Text('Create Product'),
@@ -97,132 +32,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
               child: CircularProgressIndicator(
               color: Colors.black,
             ))
-          : SingleChildScrollView(
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const SizedBox(height: 20),
-
-                    // Form
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: <Widget>[
-                          // Title field
-                          TitleFormCreateProduct(
-                              titleController: _titleController),
-                          const SizedBox(height: 20),
-
-                          // Description Field
-                          DescriptionFormCreateProduct(
-                              descriptionController: _descriptionController),
-                          const SizedBox(height: 20),
-
-                          // Price Field
-                          PriceFormCreateProduct(
-                              priceController: _priceController),
-                          const SizedBox(height: 20),
-
-                          CategoryFormCreateProduct(
-                              selectedOption: _selectedOption,
-                              selectNewOption: selectNewOption),
-
-                          const SizedBox(
-                            height: 20,
-                          ),
-
-                          // Image Field
-                          ElevatedButton(
-                              onPressed: _pickImage,
-                              child: Text(isImageLoaded == false
-                                  ? 'Pick Image'
-                                  : 'Image Selected')),
-
-                          const SizedBox(height: 10),
-
-                          // Model Field
-                          ElevatedButton(
-                              onPressed: _pickModel,
-                              child: Text(isModelLoaded == false
-                                  ? 'Pick Model'
-                                  : 'Model Selected')),
-
-                          const SizedBox(height: 20),
-
-                          // SignUp button
-                          Consumer<ProductProvider>(
-                            builder: (context, product, child) => SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 15.0),
-                                    backgroundColor: Colors.red,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      if (_imageFile == null ||
-                                          _modelFile == null) {
-                                        Utils.showToast(
-                                            'Please Select Both Image file and model File to continue.');
-                                        return;
-                                      } else {
-                                        isLoading(true);
-                                        logger.d('Product Creating');
-                                        try {
-                                          await product.createProduct(
-                                              _titleController.text,
-                                              _descriptionController.text,
-                                              int.parse(_priceController.text),
-                                              _selectedOption.toString(),
-                                              _imageFile!,
-                                              _modelFile!);
-                                          Utils.showToast(
-                                              'Product Created Successfully');
-                                          if (context.mounted) {
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const MainScreen(),
-                                                ));
-                                          }
-
-                                          logger.d('Product Created');
-                                        } catch (e) {
-                                          logger.e(e);
-                                          Utils.showToast('Product Creation failed: $e');
-                                        } finally {
-                                          isLoading(false);
-                                        }
-                                      }
-                                    }
-                                  },
-                                  child: const Text(
-                                    'Create Product',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                )),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          : FormCreateProduct(
+              updateLoadingState: updateLoadingState,),
     );
   }
 }
