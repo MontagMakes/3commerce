@@ -43,7 +43,6 @@ class FirebaseStorageService {
   }
 
   // replace file in storage using url
-
   // delete the old file and upload the new file to the same location
   Future<String> replaceFile(File newFile, String url) async {
     try {

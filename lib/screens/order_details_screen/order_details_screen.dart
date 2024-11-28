@@ -83,7 +83,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     itemBuilder: (context, index) {
                       final product = widget.orderDetails.products[index];
                       return ListTile(
-                        leading: Image.network(product.imageUrl),
+                        leading: SizedBox(height: 100, width: 100, child: Image.network(product.imageUrl)),
                         title: Text(product.title),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

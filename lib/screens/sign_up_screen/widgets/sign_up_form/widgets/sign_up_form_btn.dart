@@ -52,8 +52,9 @@ class SignUpFormBtn extends StatelessWidget {
                 await userProvider.signUp(_emailController.text,
                     _passwordController.text, _nameController.text);
 
-                await productProvider.fetchProductData();
-                await orderProvider.fetchOrders();
+                await productProvider
+                    .fetchProductData(userProvider.getUserId());
+                await orderProvider.fetchOrders(userProvider.getUserId());
                 Navigator.pushAndRemoveUntil(
                     Globals.scaffoldKey.currentContext!,
                     MaterialPageRoute(

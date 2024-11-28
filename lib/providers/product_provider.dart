@@ -49,19 +49,74 @@ class ProductProvider with ChangeNotifier {
 
     product = product.copyWith(id: productId);
 
+    // _totalProducts.add(product);
+    _myProducts.add(product);
+    notifyListeners();
+  }
+
+  // Add product to FirebaseFirestore and FirebaseStorage
+  Future<void> editProduct(String title, String description, int price,
+      String category, File? imageFile, File? modelFile,
+      [String? oldImageUrl, String? oldModelUrl]) async {
+    String imageUrl;
+    String modelUrl;
+
+    // if oldImage is not changed then use the oldImageUrl
+    // else delete the old image and upload the new image and save its url
+    if (oldImageUrl != null) {
+      imageUrl = oldImageUrl;
+    } else {
+      await _storageService.deleteFile(oldImageUrl!);
+      imageUrl = await _storageService.uploadImageFile(imageFile!);
+    }
+
+    // if oldModel is not changed then use the oldModel
+    // else delete the old Model and upload the new model and save its url
+    if (oldModelUrl != null) {
+      modelUrl = oldModelUrl;
+    } else {
+      await _storageService.deleteFile(oldModelUrl!);
+      modelUrl = modelFile != null
+          ? await _storageService.uploadModelFile(modelFile)
+          : '';
+    }
+
+    // Create ProductModel object
+    ProductModel product = ProductModel(
+        id: '',
+        title: title,
+        description: description,
+        price: price,
+        category: category,
+        ownerID: _userProvider!.getUserId().toString(),
+        imageUrl: imageUrl,
+        modelUrl: modelUrl);
+
+    String productId = await _fireStoreService.createProduct(product);
+
+    product = product.copyWith(id: productId);
+
     _totalProducts.add(product);
     _myProducts.add(product);
     notifyListeners();
   }
 
   // Fetch product data from FirebaseFirestore
-  Future<void> fetchProductData() async {
+  Future<void> fetchProductData(String currentUserID) async {
     try {
-      _totalProducts = await _fireStoreService.fetchProductData();
-      _myProducts = _totalProducts
+      List<ProductModel> fetchedProductData =
+          await _fireStoreService.fetchProductData();
+
+      _totalProducts = fetchedProductData
           .where((element) =>
-              element.ownerID == _userProvider!.getUserId().toString())
+              element.ownerID != currentUserID)
           .toList();
+           
+      _myProducts = fetchedProductData
+          .where((element) =>
+              element.ownerID == currentUserID)
+          .toList();
+
       notifyListeners();
     } catch (e) {
       logger.e('Error fetching Products: $e');

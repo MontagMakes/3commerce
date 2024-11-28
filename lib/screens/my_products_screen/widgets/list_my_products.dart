@@ -1,11 +1,13 @@
+import 'package:e_commerce/models/product_model.dart';
 import 'package:e_commerce/providers/product_provider.dart';
+import 'package:e_commerce/screens/edit_product_screen/edit_product_screen.dart';
 import 'package:e_commerce/screens/product_details_screen/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ProductsMyProducts extends StatelessWidget {
+class ListMyProducts extends StatelessWidget {
   final Function(bool) updateLoadingState;
-  const ProductsMyProducts({super.key, required this.updateLoadingState});
+  const ListMyProducts({super.key, required this.updateLoadingState});
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +55,16 @@ class ProductsMyProducts extends StatelessWidget {
                         children: [
                           IconButton(
                             onPressed: () async {
-                              updateLoadingState(true);
-                              await productProvider.deleteProduct(
-                                  productProvider.myProducts[index].id);
-                              updateLoadingState(false);
+                              ProductModel product = productProvider.myProducts
+                                  .firstWhere((element) =>
+                                      element.id ==
+                                      productProvider.myProducts[index].id);
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return EditProductScreen(
+                                  product: product,
+                                );
+                              }));
                             },
                             icon: const Icon(Icons.edit),
                           ),
@@ -67,7 +75,7 @@ class ProductsMyProducts extends StatelessWidget {
                                   productProvider.myProducts[index].id);
                               updateLoadingState(false);
                             },
-                             icon: const Icon(Icons.delete),
+                            icon: const Icon(Icons.delete),
                           )
                         ],
                       )

@@ -1,8 +1,10 @@
 import 'package:e_commerce/globals.dart';
+import 'package:e_commerce/main.dart';
 import 'package:e_commerce/providers/order_provider.dart';
 import 'package:e_commerce/providers/product_provider.dart';
 import 'package:e_commerce/providers/user_provider.dart';
 import 'package:e_commerce/screens/main_screen/main_screen.dart';
+import 'package:e_commerce/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -140,9 +142,11 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                               await userProvider.signIn(_emailController.text,
                                   _passwordController.text);
 
-                              await productProvider.fetchProductData();
-                              await orderProvider.fetchOrders();
-                              
+                              await productProvider
+                                  .fetchProductData(userProvider.getUserId());
+                              await orderProvider
+                                  .fetchOrders(userProvider.getUserId());
+
                               Navigator.pushAndRemoveUntil(
                                 Globals.scaffoldKey.currentContext!,
                                 MaterialPageRoute(
@@ -151,30 +155,8 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                                 (route) => false,
                               );
                             } on FirebaseAuthException catch (e) {
-                              String message;
-                              switch (e.code) {
-                                case 'user-not-found':
-                                  message = 'No user found for that email.';
-                                  break;
-                                case 'wrong-password':
-                                  message = 'Wrong password provided.';
-                                  break;
-                                case 'invalid-email':
-                                  message = 'Invalid email provided.';
-                                  break;
-                                default:
-                                  message =
-                                      'An error occurred. Please try again.';
-                              }
-
-                              Fluttertoast.showToast(
-                                  msg: "Login Failed: $message",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.white,
-                                  textColor: Colors.black,
-                                  fontSize: 16.0);
+                              Utils.showToast(e.code.toString());
+                              logger.e(e);
                             } finally {
                               setState(() {
                                 _isLoading = false;

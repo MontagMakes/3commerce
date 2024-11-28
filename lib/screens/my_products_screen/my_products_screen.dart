@@ -1,6 +1,5 @@
 import 'package:e_commerce/providers/product_provider.dart';
-import 'package:e_commerce/screens/create_product_screen.dart/create_product_screen.dart';
-import 'package:e_commerce/screens/my_products_screen/widgets/products_my_products.dart';
+import 'package:e_commerce/screens/my_products_screen/widgets/list_my_products.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,15 +27,6 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         leading: const BackButton(),
         title: const Text("MyProducts"),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const CreateProductScreen();
-          }));
-        },
-        backgroundColor: Colors.grey[300],
-        child: const Icon(Icons.add),
-      ),
       body: _isLoading == true
           ? const Center(child: CircularProgressIndicator())
           : Container(
@@ -48,7 +38,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                           heightFactor: 30,
                           child: Text("List is empty"),
                         )
-                      : ProductsMyProducts(
+                      : ListMyProducts(
                           updateLoadingState: updateLoadingState)
                 ],
               ),

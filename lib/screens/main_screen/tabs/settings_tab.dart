@@ -1,5 +1,5 @@
 import 'package:e_commerce/providers/user_provider.dart';
-import 'package:e_commerce/screens/create_product_screen.dart/create_product_screen.dart';
+import 'package:e_commerce/screens/create_product_screen/create_product_screen.dart';
 import 'package:e_commerce/screens/main_screen/tabs/widgets_settings/options_tile_settings.dart';
 import 'package:e_commerce/screens/main_screen/tabs/widgets_settings/profile_section_settings.dart';
 import 'package:e_commerce/screens/my_products_screen/my_products_screen.dart';

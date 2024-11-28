@@ -1,7 +1,8 @@
 import 'package:e_commerce/models/product_model.dart';
-import 'package:e_commerce/providers/cart_provider.dart';
+import 'package:e_commerce/providers/user_provider.dart';
 import 'package:e_commerce/screens/main_screen/main_screen.dart';
-import 'package:e_commerce/screens/model_view_screen/model_view_screen.dart';
+import 'package:e_commerce/screens/product_details_screen/widgets/add_to_cart_button_product_details.dart';
+import 'package:e_commerce/screens/product_details_screen/widgets/model_button_product_details.dart';
 import 'package:e_commerce/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,26 +17,17 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartProvider = Provider.of<CartProvider>(context);
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(58),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: Utils.appBarGradient,
-            ),
-            child: AppBar(
-              leading: BackButton(
-                onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return const MainScreen();
-                  }));
-                },
-              ),
-              title: const Text("Product Details"),
-            ),
+        appBar: AppBar(
+          leading: BackButton(
+            onPressed: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) {
+                return const MainScreen();
+              }));
+            },
           ),
+          title: const Text("Product Details"),
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -71,34 +63,8 @@ class ProductDetailsScreen extends StatelessWidget {
                         ),
 
                         // 3D button
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: productDetails.modelUrl == ''
-                                ? null
-                                : Utils.appBarGradient,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: ElevatedButton(
-                            onPressed: productDetails.modelUrl == ''
-                                ? null
-                                : () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return ModelViewScreen(
-                                        productDetails: productDetails,
-                                      );
-                                    }));
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                            ),
-                            child: const Text(
-                              "3D",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
+                        ModelButtonProductDetails(
+                            productDetails: productDetails),
 
                         // Product price
                         Text(
@@ -137,36 +103,17 @@ class ProductDetailsScreen extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     // Add to cart button
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            cartProvider.addItem(productDetails);
-                            Utils.showToast('Product added to cart');
-                          },
-                          child: Container(
-                            width: 120,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              gradient: Utils.appBarGradient,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Add to Cart",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Icon(Icons.shopping_cart_outlined,
-                                    color: Colors.white),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+
+                    Consumer<UserProvider>(
+                      builder: (context, userProvider, child) => Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          productDetails.ownerID != userProvider.getUserId()
+                              ? AddToCartButtonProductDetails(
+                                  productDetails: productDetails)
+                              : const SizedBox(),
+                        ],
+                      ),
                     ),
                   ],
                 ),

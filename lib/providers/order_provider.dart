@@ -37,9 +37,11 @@ class OrderProvider with ChangeNotifier {
   }
 
   // Fetch Orders
-  Future<void> fetchOrders() async {
+  Future<void> fetchOrders(currentUserID) async {
     try {
-      _orders = await _fireStoreService.fetchOrderData();
+      _orders = await _fireStoreService.fetchOrderData().then((orders){
+        return orders.where((order) => order.userId == currentUserID).toList();
+      });
       notifyListeners();
     } catch (error) {
       logger.e(error);

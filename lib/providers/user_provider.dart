@@ -51,7 +51,7 @@ class UserProvider with ChangeNotifier {
         await _fireStoreService.fetchUserData(userCred.user!.uid);
   }
 
-  String? getUserId() {
-    return _currentUserData?.id;
+  String getUserId() {
+    return _currentUserData!.id.toString();
   }
 }

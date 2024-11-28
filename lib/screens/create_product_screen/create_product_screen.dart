@@ -1,5 +1,5 @@
 import 'package:e_commerce/globals.dart';
-import 'package:e_commerce/screens/create_product_screen.dart/form_create_product/form_create_product.dart';
+import 'package:e_commerce/screens/create_product_screen/form_create_product/form_create_product.dart';
 import 'package:flutter/material.dart';
 
 class CreateProductScreen extends StatefulWidget {
@@ -33,7 +33,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
               color: Colors.black,
             ))
           : FormCreateProduct(
-              updateLoadingState: updateLoadingState,),
+              updateLoadingState: updateLoadingState),
     );
   }
 }
