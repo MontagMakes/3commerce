@@ -1,6 +1,5 @@
 import 'package:e_commerce/models/product_model.dart';
 import 'package:e_commerce/providers/product_provider.dart';
-import 'package:e_commerce/screens/edit_product_screen/edit_product_screen.dart';
 import 'package:e_commerce/screens/product_details_screen/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,21 +52,6 @@ class ListMyProducts extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          IconButton(
-                            onPressed: () async {
-                              ProductModel product = productProvider.myProducts
-                                  .firstWhere((element) =>
-                                      element.id ==
-                                      productProvider.myProducts[index].id);
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return EditProductScreen(
-                                  product: product,
-                                );
-                              }));
-                            },
-                            icon: const Icon(Icons.edit),
-                          ),
                           IconButton(
                             onPressed: () async {
                               updateLoadingState(true);
