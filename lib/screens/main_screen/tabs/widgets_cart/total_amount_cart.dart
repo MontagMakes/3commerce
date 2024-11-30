@@ -22,7 +22,7 @@ class TotalAmountCart extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Text(
-              '\$${cartProvider.totalAmount}',
+              '\$${cartProvider.cart.totalPrice}',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ],

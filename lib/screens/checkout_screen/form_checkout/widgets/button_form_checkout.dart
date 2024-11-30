@@ -39,7 +39,7 @@ class ButtonFormCheckout extends StatelessWidget {
                 '${streetController.text},${cityController.text},${countryController.text}';
             try {
               await orderProvider.createOrder(cartProvider.cart.products,
-                  cartProvider.totalAmount, address);
+                  cartProvider.cart.totalPrice, address);
               cartProvider.clearCart();
 
               Navigator.pushReplacement(

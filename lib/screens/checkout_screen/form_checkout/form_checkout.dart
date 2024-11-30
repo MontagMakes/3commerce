@@ -61,7 +61,7 @@ class _FormCheckoutState extends State<FormCheckout> {
                   // Total Amount Value
                   Consumer<CartProvider>(
                     builder: (context, cartProvider, child) => Text(
-                        "\$${cartProvider.totalAmount}",
+                        "\$${cartProvider.cart.totalPrice}",
                         style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold)),
                   ),

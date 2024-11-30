@@ -1,3 +1,4 @@
+import 'package:e_commerce/providers/cart_provider.dart';
 import 'package:e_commerce/providers/user_provider.dart';
 import 'package:e_commerce/screens/create_product_screen/create_product_screen.dart';
 import 'package:e_commerce/screens/main_screen/tabs/widgets_settings/options_tile_settings.dart';
@@ -48,18 +49,18 @@ class SettingsTab extends StatelessWidget {
                         ))),
                 OptionTile(
                     icon: Icons.local_shipping,
-                    title: 'My Orders',
+                    title: 'Order History',
                     ontap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const OrderHistoryScreen()))),
-                Consumer<UserProvider>(
-                  builder: (context, userProvider, child) => OptionTile(
+                Consumer2<UserProvider, CartProvider>(
+                  builder: (context, userProvider, cartProvider, child) => OptionTile(
                     icon: Icons.logout,
                     title: 'Sign Out',
                     ontap: () async {
                       await userProvider.signOut();
-
+                      cartProvider.clearCart();
                       if (context.mounted) {
                         Navigator.pushAndRemoveUntil(
                           context,

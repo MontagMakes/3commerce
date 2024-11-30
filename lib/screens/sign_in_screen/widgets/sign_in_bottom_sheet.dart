@@ -143,7 +143,7 @@ class _SignInBottomSheetState extends State<SignInBottomSheet> {
                                   _passwordController.text);
 
                               await productProvider
-                                  .fetchProductData(userProvider.getUserId());
+                                  .fetchAllProducts(userProvider.getUserId());
                               await orderProvider
                                   .fetchOrders(userProvider.getUserId());
 
