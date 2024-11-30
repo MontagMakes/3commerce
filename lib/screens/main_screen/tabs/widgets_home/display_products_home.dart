@@ -27,50 +27,52 @@ class DisplayProductsHome extends StatelessWidget {
               products.length,
               (index) {
                 return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailsScreen(
+                            productDetails: products[index],
+                          ),
+                        ));
+                  },
                   child: Material(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     color: Colors.white,
                     elevation: 10,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProductDetailsScreen(
-                                productDetails: products[index],
-                              ),
-                            ));
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image(
-                            image: NetworkImage(products[index].imageUrl),
-                            height: 120,
-                            width: 130,
-                          ),
-                          Text(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image(
+                          image: NetworkImage(products[index].imageUrl),
+                          height: 120,
+                          width: 130,
+                        ),
+                        Expanded(
+                          child: Text(
+                            textAlign: TextAlign.center,
                             products[index].title,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(fontSize: 20),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 7.0, right: 7.0, top: 5.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "\$${products[index].price.toString()}",
-                                  style: const TextStyle(
-                                      color: Colors.grey, fontSize: 20),
-                                ),
-                                const SizedBox(width: 70),
-                              ],
-                            ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 7.0, right: 7.0, top: 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "\$${products[index].price.toString()}",
+                                style: const TextStyle(
+                                    color: Colors.grey, fontSize: 20),
+                              ),
+                              const SizedBox(width: 70),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 );

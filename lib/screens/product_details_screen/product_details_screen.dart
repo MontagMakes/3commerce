@@ -50,14 +50,11 @@ class ProductDetailsScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         // Product title
-                        SizedBox(
-                          width: 100,
-                          child: Text(
-                            productDetails.title,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        Text(
+                          productDetails.title,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
 

@@ -63,7 +63,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   ),
                   ListTile(
                     title: const Text("Total Price"),
-                    subtitle: Text(widget.orderDetails.totalPrice.toString()),
+                    subtitle: Text("\$${widget.orderDetails.totalPrice.toString()}"),
                   ),
                   ListTile(
                     title: const Text("Order Status"),
@@ -98,7 +98,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Price: ${product.price.toString()} pkr'),
+                            Text('Price: \$${product.price.toString()}'),
                             Text('Category: ${product.category}')
                           ],
                         ),

@@ -84,7 +84,7 @@ class ProductProvider with ChangeNotifier {
     try {
       // Check if the image in product are needed by order documents
       // If not, delete them from firebase Storage.
-      if (await _fireStoreService.isImageNeededIn(imageUrl, 'orders')) {
+      if (!await _fireStoreService.isImageNeededIn(imageUrl, 'orders')) {
         await _storageService.deleteFile(_myProducts
             .firstWhere((element) => element.id == productId)
             .imageUrl);
@@ -92,7 +92,7 @@ class ProductProvider with ChangeNotifier {
 
       // Check if the model in product are needed by order documents
       // If not, delete them from firebase Storage.
-      if (await _fireStoreService.isModelNeededIn(modelUrl, 'orders') && modelUrl != '') {
+      if (!await _fireStoreService.isModelNeededIn(modelUrl, 'orders') && modelUrl != '') {
         await _storageService.deleteFile(_myProducts
             .firstWhere((element) => element.id == productId)
             .modelUrl);
