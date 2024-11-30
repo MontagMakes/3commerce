@@ -48,6 +48,8 @@ dependencies:
   firebase_storage: ^12.3.5
   logger: ^2.4.0
   mockito: ^5.4.4
+  build_runner: ^2.4.13
+  build: ^2.4.1
 
 dev_dependencies:
   flutter_test:

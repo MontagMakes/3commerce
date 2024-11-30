@@ -1,5 +1,6 @@
 import 'package:e_commerce/models/order_model.dart';
 import 'package:e_commerce/providers/order_provider.dart';
+import 'package:e_commerce/screens/product_details_screen/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -83,7 +84,16 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     itemBuilder: (context, index) {
                       final product = widget.orderDetails.products[index];
                       return ListTile(
-                        leading: SizedBox(height: 100, width: 100, child: Image.network(product.imageUrl)),
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return ProductDetailsScreen(productDetails: product,);
+                          }));
+                        },
+                        leading: SizedBox(
+                            height: 100,
+                            width: 100,
+                            child: Image.network(product.imageUrl)),
                         title: Text(product.title),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

@@ -20,7 +20,7 @@ class ProductDetailsScreen extends StatelessWidget {
         appBar: AppBar(
           leading: BackButton(
             onPressed: () {
-              Navigator.pushReplacement(context,
+              Navigator.pop(context,
                   MaterialPageRoute(builder: (context) {
                 return const MainScreen();
               }));

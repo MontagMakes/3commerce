@@ -5,11 +5,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class UserProvider with ChangeNotifier {
-  final FirebaseAuthService _authService = FirebaseAuthService();
-  final FirebaseFireStoreService _fireStoreService = FirebaseFireStoreService();
+  final FirebaseAuthService _authService;
+  final FirebaseFireStoreService _fireStoreService;
+
+  UserProvider()
+      : _authService = FirebaseAuthService(),
+        _fireStoreService = FirebaseFireStoreService();
+
+  UserProvider.test({
+    required FirebaseAuthService authService,
+    required FirebaseFireStoreService fireStoreService,
+  })  : _authService = authService,
+        _fireStoreService = fireStoreService;
 
   UserModel? _currentUserData;
-
   UserModel? get currentUserData => _currentUserData;
 
   // SignIn using email and password
@@ -35,7 +44,7 @@ class UserProvider with ChangeNotifier {
     );
 
     await _fireStoreService.createUser(userModelData);
-    fetchUserData(userCred);
+    await fetchUserData(userCred);
   }
 
   Future<void> resetPassword(String email) async {

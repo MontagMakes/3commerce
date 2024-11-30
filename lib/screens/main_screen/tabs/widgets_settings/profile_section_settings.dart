@@ -16,7 +16,7 @@ class ProfileSectionSettings extends StatelessWidget {
           children: [
             const SizedBox(height: 10),
             Text(
-              userProvider.currentUserData?.name ?? 'User',
+              userProvider.currentUserData?.name ?? 'UserName',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 24,
@@ -24,7 +24,7 @@ class ProfileSectionSettings extends StatelessWidget {
               ),
             ),
             Text(
-              userProvider.currentUserData?.email ?? 'Email Address',
+              userProvider.currentUserData?.email ?? 'UserEmail',
               style: const TextStyle(color: Colors.black),
             ),
           ],
